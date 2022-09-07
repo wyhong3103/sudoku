@@ -68,6 +68,10 @@ const displayController = (() => {
         startBtn.classList.add("start-btn");
         startBtn.classList.add("big-button");
         startBtn.textContent = "Start";
+        startBtn.addEventListener("click", () => {
+            setTimeout(gameInterface, 175);
+        });
+
         mainContainer.appendChild(title);
         mainContainer.appendChild(modeBtn);
         mainContainer.appendChild(startBtn);
@@ -154,6 +158,7 @@ const displayController = (() => {
     }
 
     function gameInterface(){
+        console.log("hi");
         content.innerHTML = "";
         const gameContainer = document.createElement("div");
         gameContainer.classList.add("game-container");
@@ -193,6 +198,9 @@ const displayController = (() => {
         btns[3].classList.add("exit-btn");
         btns[3].textContent = "Exit";
         btns[3].id = "exit";
+        btns[3].addEventListener("click", () => {
+            setTimeout(mainMenu, 175);
+        });
 
         gameOption.appendChild(timeContainer);
         for(let i = 0; i < 4; i++){
@@ -224,7 +232,7 @@ const displayController = (() => {
     }
     
     function init(){
-        gameInterface();
+        initMenu();
     }
 
     return {
