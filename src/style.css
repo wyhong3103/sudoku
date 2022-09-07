@@ -30,6 +30,27 @@ html{
     --customColorD : #bfdbfe;
     --customColorE : #dbeafe;
 
+    --exitColorA : #ef4444;
+    --exitColorB : #f87171;
+    --exitColorC : #fca5a5;
+    --exitColorD : #fecaca;
+    --exitColorE : #fee2e2;
+
+    --cellAColorA : #64748b;
+    --cellAColorB : #94a3b8;
+    --cellAColorC : #cbd5e1;
+    --cellAColorD : #e2e8f0;
+    --cellAColorE : #f1f5f9;
+
+    --cellBColorA : #0f172a;
+    --cellBColorB : #1e293b;
+    --cellBColorC : #334155;
+    --cellBColorD : #475569;
+    --cellBColorE : #64748b;
+
+    --gameA : rgb(247, 245, 226);
+    --gameB : rgb(180, 172, 97);
+
     --brownA : rgb(61, 54, 12);
     --brownB : rgb(255, 252, 233);
     --titleFont :'Lobster', cursive; 
@@ -106,9 +127,6 @@ button.big-button{
     font-weight: 700;
     text-transform: uppercase;
     font-family: var(--mainFont);
-}
-
-button.big-button {
     padding: 1em 2em;
     border: 2px solid var(--colorShadeA);
     border-radius: 1em;
@@ -214,7 +232,7 @@ h1.title{
 }
 
 #custom:active::before{
-    box-shadow: 0 0 0 2px var(--customColorB), 0 0.25em 0 0 var(--customCOlorB);
+    box-shadow: 0 0 0 2px var(--customColorB), 0 0.25em 0 0 var(--customColorB);
 }
 
 .hide-bg{
@@ -300,3 +318,189 @@ h1.title{
     align-items: center;
     gap : 1rem;
 }
+
+/*
+
+    GAME INTERFACE
+
+*/
+
+.game-container{
+    height : 100%;
+    width : 100%;
+    padding : 2rem 15rem 2rem 15rem;
+
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+}
+
+.game-title{
+    grid-column: 1 / -1;
+    grid-row: 1 / 2;
+    font-size : 7rem;
+    font-family: var(--titleFont);
+    color : var(--brownA);
+    text-align: center;
+}
+
+.game-options{
+    grid-row: 2 / -1;
+    grid-column : 1 / 3;   
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap : 1rem;
+    gap : 5rem;
+    font-size: 2.5rem;
+}
+
+.game-options > button{
+    width : 20rem;
+    font-size: 1.5rem;
+}
+
+.time{
+    background-color : var(--backgroundColorA);
+    padding : 2rem;
+    border-radius: 1rem;
+}
+
+#exit{
+    color : var(--exitColorA);
+    border : 2px solid var(--exitColorA);
+    background : var(--exitColorE);
+}
+
+#exit::before{
+    background: var(--exitColorC);
+}
+
+#exit:hover{
+    background: var(--exitColorD);
+}
+
+#exit:active::before{
+    box-shadow: 0 0 0 2px var(--exitColorB), 0 0.25em 0 0 var(--exitColorB);
+}
+
+.game-board-container{
+    grid-row: 2 / -1;
+    grid-column: 3 / -1;
+    padding : 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-board{
+    height : 55rem;
+    width : 55rem;
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+}
+
+/*
+
+    CELL STYLE
+
+*/
+
+.cell{
+    background-color : var(--gameA);
+    border : 1px solid var(--gameB);
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    outline: none;
+    border: 0;
+    vertical-align: middle;
+    text-decoration: none;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.cell{
+    padding: 1em 2em;
+    border-radius: 1em;
+    transform-style: preserve-3d;
+    transition: all 175ms cubic-bezier(0, 0, 1, 1);
+}
+.cell::before {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    transform: translate3d(0, 0.75em, -1em);
+    transition: all 175ms cubic-bezier(0, 0, 1, 1);
+    box-shadow:
+    15px 2.8px 2.2px rgba(0, 0, 0, 0.034),
+    15px 6.7px 5.3px rgba(0, 0, 0, 0.048),
+    15px 12.5px 10px rgba(0, 0, 0, 0.06),
+    15px 22.3px 17.9px rgba(0, 0, 0, 0.072),
+    15px 41.8px 33.4px rgba(0, 0, 0, 0.086),
+    15px 100px 80px rgba(0, 0, 0, 0.12)
+  ;
+}
+
+.cell:active {
+    transform: translate(0em, 0.75em);
+}
+
+.cell:active::before {
+    transform: translate3d(0, 0, -1em);
+}
+
+.cell_a{
+    color : var(--cellAColorA);
+    border: 2px solid var(--cellAColorA);
+    background: var(--cellAColorE);
+}
+
+.cell_a::before{
+    background: var(--cellAColorC);
+}
+
+.cell_a:hover{
+    background: var(--cellAColorD);
+}
+
+.cell_a:active::before{
+    box-shadow: 0 0 0 2px var(--cellAColorB), 0 0.25em 0 0 var(--cellAColorB);
+}
+
+.cell_b{
+    color : var(--cellBColorA);
+    border: 2px solid var(--cellBColorA);
+    background: var(--cellBColorE);
+}
+
+.cell_b::before{
+    background: var(--cellBColorC);
+}
+
+.cell_b:hover{
+    background: var(--cellBColorD);
+}
+
+.cell_b:active::before{
+    box-shadow: 0 0 0 2px var(--cellBColorB), 0 0.25em 0 0 var(--cellBColorB);
+}
+
+.cell {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cell p{
+    font-size: 2.5rem;
+}
+
+

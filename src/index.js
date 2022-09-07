@@ -153,9 +153,78 @@ const displayController = (() => {
         content.appendChild(container);
     }
 
+    function gameInterface(){
+        content.innerHTML = "";
+        const gameContainer = document.createElement("div");
+        gameContainer.classList.add("game-container");
+
+        const gameTitle = document.createElement("h1");
+        gameTitle.classList.add("game-title");
+        gameTitle.textContent = "Sudoku";
+
+        const gameOption = document.createElement("div");
+        gameOption.classList.add("game-options");
+
+        const timeContainer = document.createElement("div");
+        timeContainer.classList.add("time");
+        const timeText = document.createElement("h4");
+        timeText.textContent = "Elapsed Time :";
+        const curTime = document.createElement("h4");
+        curTime.textContent = "0";
+
+        timeContainer.appendChild(timeText);
+        timeContainer.appendChild(curTime);
+        const btns = [];
+        for(let i = 0; i < 4; i++){
+            btns.push(document.createElement("button"));
+            btns[i].classList.add("big-button");
+            btns[i]
+        }
+
+        btns[0].classList.add("hint-btn");
+        btns[0].textContent = "Hint";
+
+        btns[1].classList.add("ans-btn");
+        btns[1].textContent = "Reveal Solution";
+
+        btns[2].classList.add("restart-btn");
+        btns[2].textContent = "Restart";
+
+        btns[3].classList.add("exit-btn");
+        btns[3].textContent = "Exit";
+        btns[3].id = "exit";
+
+        gameOption.appendChild(timeContainer);
+        for(let i = 0; i < 4; i++){
+            gameOption.appendChild(btns[i]);
+        }
+        
+        const gameBoardContainer = document.createElement("div");
+        gameBoardContainer.classList.add("game-board-container");
+        const gameBoard = document.createElement("div");
+        gameBoard.classList.add("game-board");
+        gameBoardContainer.appendChild(gameBoard);
+
+        for(let i = 0; i < 9; i++){
+            for(let j = 0; j < 9; j++){
+                const cell = document.createElement("div");
+                cell.classList.add("cell");
+                if (Math.floor(i/3) % 2 === 1 && Math.floor(j/3) % 2 === 0 || (Math.floor(i/3) % 2 === 0 && Math.floor(j/3) % 2 === 1)){
+                    cell.classList.add("cell_b");
+                }else cell.classList.add("cell_a");
+                const p = document.createElement("p");
+                cell.appendChild(p);
+                gameBoard.appendChild(cell);
+            }
+        }
+        gameContainer.appendChild(gameTitle);
+        gameContainer.appendChild(gameOption);
+        gameContainer.appendChild(gameBoardContainer);
+        content.appendChild(gameContainer);
+    }
     
     function init(){
-        initMenu();
+        gameInterface();
     }
 
     return {
