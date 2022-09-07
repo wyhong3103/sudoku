@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Manrope:wght@800&display=swap');
+
 
 *{
     margin: 0;
@@ -10,14 +11,29 @@ html{
     font-size : 10px;
 
     --backgroundColor: rgba(246, 241, 209);
-    --colorShadeA: rgb(106, 163, 137);
-    --colorShadeB: rgb(121, 186, 156);
-    --colorShadeC: rgb(150, 232, 195);
-    --colorShadeD: rgb(210, 245, 228);
-    --colorShadeE: rgb(205, 255, 232);
-    --brownA : rgb(92, 82, 19);
+    --backgroundColorA: rgb(250, 247, 223);
+    --colorShadeA: #64748b;
+    --colorShadeB: #94a3b8;
+    --colorShadeC: #cbd5e1;
+    --colorShadeD: #e2e8f0;
+    --colorShadeE: #f1f5f9;
+    
+    --standardColorA : #eab308;
+    --standardColorB : #facc15;
+    --standardColorC : #fde047;
+    --standardColorD : #fef08a;
+    --standardColorE : #fef9c3;
+
+    --customColorA : #3b82f6;
+    --customColorB : #60a5fa;
+    --customColorC : #93c5fd;
+    --customColorD : #bfdbfe;
+    --customColorE : #dbeafe;
+
+    --brownA : rgb(61, 54, 12);
     --brownB : rgb(255, 252, 233);
-    --mainFont : 'Roboto Mono', monospace;
+    --titleFont :'Lobster', cursive; 
+    --mainFont :'Manrope', sans-serif; 
 }
 
 #content{
@@ -27,6 +43,12 @@ html{
     background-color: var(--backgroundColor);
     overflow: auto;
 }
+
+/*
+
+    INIT MENU
+
+*/
 
 .init-menu{
     height : 100%;
@@ -46,13 +68,13 @@ html{
     gap: 2rem;
 }
 
-label, input{
-    font-size : 2.5rem;
+.init-menu label, .init-menu input{
+    font-size : 3rem;
     color : var(--brownA);
     font-family: var(--mainFont);
 }
 
-input{
+.init-menu input{
     border-radius: 5px;
     outline: none;
     border: none;
@@ -62,6 +84,7 @@ input{
 
 .proceed-btn{
     width : 50%;
+    font-size : 2rem;
 }
 
 /*
@@ -79,11 +102,10 @@ button.big-button{
     border: 0;
     vertical-align: middle;
     text-decoration: none;
-    font-size: 1.5rem;
     color: var(--colorShadeA);
     font-weight: 700;
     text-transform: uppercase;
-    font-family: inherit;
+    font-family: var(--mainFont);
 }
 
 button.big-button {
@@ -120,4 +142,153 @@ button.big-button:active {
 button.big-button:active::before {
     transform: translate3d(0, 0, -1em);
     box-shadow: 0 0 0 2px var(--colorShadeB), 0 0.25em 0 0 var(--colorShadeB);
+}
+
+
+/*
+
+    MAIN MENU
+
+*/
+
+.main-menu{
+    position: absolute;
+    height : 100%;
+    width : 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap : 3rem;
+}
+
+h1.title{
+    font-size : 10rem;
+    font-family: var(--titleFont);
+    color : var(--brownA);
+}
+
+
+.mode-btn, .start-btn{
+    font-size : 2rem;
+}
+
+#standard{
+    color : var(--standardColorA);
+    border : 2px solid var(--standardColorA);
+    background : var(--standardColorE);
+}
+
+#standard::before{
+    background: var(--standardColorC);
+}
+
+#standard:hover{
+    background: var(--standardColorD);
+}
+
+#standard:active::before{
+    box-shadow: 0 0 0 2px var(--standardColorB), 0 0.25em 0 0 var(--standardCOlorB);
+}
+
+#custom{
+    color : var(--customColorA);
+    border : 2px solid var(--customColorA);
+    background : var(--customColorE);
+}
+
+#custom::before{
+    background: var(--customColorC);
+}
+
+#custom:hover{
+    background: var(--customColorD);
+}
+
+#custom:active::before{
+    box-shadow: 0 0 0 2px var(--customColorB), 0 0.25em 0 0 var(--customCOlorB);
+}
+
+.hide-bg{
+    position: absolute;
+    height : 100%;
+    width : 100%;
+    background-color: black;
+    opacity : 0.5;
+}
+
+.mode-pop-up-container{
+    height : 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mode-pop-up{
+    position: absolute;
+    height : 35rem;
+    width : 100rem;
+    background-color : var(--backgroundColor);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    padding : 2.5rem;
+    border-radius : 1rem;
+}
+
+.mode-pop-up > div{
+    border-radius: 1rem;
+    padding : 1rem;
+}
+.mode-pop-up h1{
+    font-size : 5rem;
+    color : var(--brownA);
+    text-align: center;
+}
+
+.mode-pop-up h3{
+    font-size : 4rem;
+}
+
+.mode-pop-up p{
+    font-size : 1.5rem;
+}
+
+.standard-text{
+    background-color: var(--standardColorE);
+    color : var(--standardColorA);
+    transition : all 0.3s;
+}
+
+.standard-text:hover{
+    cursor: pointer;
+    background-color: var(--standardColorD);
+}
+
+.custom-text{
+    background-color: var(--customColorD);
+    color : var(--customColorA);
+    transition : all 0.3s;
+    display: flex;
+    flex-direction: row;
+}
+
+.custom-text:hover{
+    cursor: pointer;
+    background-color: var(--customColorC);
+}
+
+.custom-text-left{
+    flex-grow: 1;
+}
+
+.custom-text-right{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap : 1rem;
 }
