@@ -30,7 +30,7 @@ const displayController = (() => {
         btn.textContent = "PROCEED";
 
         btn.addEventListener("click", ()=>{
-            mainMenu();
+            setTimeout(mainMenu,175);
         });
 
         usernameForm.appendChild(label);
@@ -57,8 +57,11 @@ const displayController = (() => {
         modeBtn.textContent = `Mode : ${(currentMode[0] === 0 ? "Standard" : `Custom - ${currentMode[1]}`)}`;
         modeBtn.id = `${(currentMode[0] === 0 ? "standard" : "custom")}`;;
         modeBtn.addEventListener("click", () =>{
-            hideBg();
-            modePopUp();
+            const showPopUp = () => {
+                hideBg();
+                modePopUp();
+            };
+            setTimeout(showPopUp, 175);
         });
 
         const startBtn = document.createElement("button");
