@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+*{
+    margin: 0;
+    padding : 0;
+    box-sizing: border-box;
+}
+
+html{
+    font-size : 10px;
+
+    --backgroundColor: rgba(246, 241, 209);
+    --colorShadeA: rgb(106, 163, 137);
+    --colorShadeB: rgb(121, 186, 156);
+    --colorShadeC: rgb(150, 232, 195);
+    --colorShadeD: rgb(210, 245, 228);
+    --colorShadeE: rgb(205, 255, 232);
+    --brownA : rgb(92, 82, 19);
+    --brownB : rgb(255, 252, 233);
+    --mainFont : 'Roboto Mono', monospace;
+}
+
+#content{
+    height: 100vh;
+    width : 100vw;
+    font-family: var(--mainFont);
+    background-color: var(--backgroundColor);
+    overflow: auto;
+}
+
+.init-menu{
+    height : 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap : 2rem;
+}
+
+.username-form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+label, input{
+    font-size : 2.5rem;
+    color : var(--brownA);
+    font-family: var(--mainFont);
+}
+
+input{
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    padding : 1.5rem;
+    background-color : var(--brownB);
+}
+
+.proceed-btn{
+    width : 50%;
+}
+
+/*
+
+3D Cartoon Push Button Effect In CSS (Modified)
+https://codemyui.com/3d-cartoon-push-button-effect-in-css/
+
+*/
+
+button.big-button{
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    outline: none;
+    border: 0;
+    vertical-align: middle;
+    text-decoration: none;
+    font-size: 1.5rem;
+    color: var(--colorShadeA);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: inherit;
+}
+
+button.big-button {
+    padding: 1em 2em;
+    border: 2px solid var(--colorShadeA);
+    border-radius: 1em;
+    background: var(--colorShadeE);
+    transform-style: preserve-3d;
+    transition: all 175ms cubic-bezier(0, 0, 1, 1);
+}
+button.big-button::before {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--colorShadeC);
+    border-radius: inherit;
+    transform: translate3d(0, 0.75em, -1em);
+    transition: all 175ms cubic-bezier(0, 0, 1, 1);
+}
+
+button.big-button:hover {
+    background: var(--colorShadeD);
+}
+
+button.big-button:active {
+    transform: translate(0em, 0.75em);
+}
+
+button.big-button:active::before {
+    transform: translate3d(0, 0, -1em);
+    box-shadow: 0 0 0 2px var(--colorShadeB), 0 0.25em 0 0 var(--colorShadeB);
+}
