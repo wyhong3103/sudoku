@@ -199,7 +199,7 @@ const view = (() => {
         timeText.textContent = "Elapsed Time :";
         const curTime = document.createElement("h4");
         curTime.classList.add("cur-time");
-        curTime.textContent = (isInGame === true ? `${currentState.getTime()}` : "0");
+        curTime.textContent = (isInGame === true ?`${Math.floor(currentState.getTime()/60)}m ${currentState.getTime()%60}s`: "0m 0s");
 
         timeContainer.appendChild(timeText);
         timeContainer.appendChild(curTime);
@@ -322,10 +322,9 @@ const controller = (() => {
             isInGame = true;
         }
         const curTime = document.querySelector(".cur-time")
-        console.log("here");
         const timer = window.setInterval(()=>{
             currentState.addTime();
-            curTime.textContent = `${currentState.getTime()}`;
+            curTime.textContent = `${Math.floor(currentState.getTime()/60)}m ${currentState.getTime()%60}s`;
         }, 1000);
 
 
