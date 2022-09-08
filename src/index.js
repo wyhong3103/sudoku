@@ -386,6 +386,7 @@ const view = (() => {
                 if (Math.floor(i/3) % 2 === 1 && Math.floor(j/3) % 2 === 0 || (Math.floor(i/3) % 2 === 0 && Math.floor(j/3) % 2 === 1)){
                     cell.classList.add("cell_b");
                 }else cell.classList.add("cell_a");
+                cell.classList.add("user-cell");
                 const p = document.createElement("p");
                 cell.appendChild(p);
 
@@ -498,14 +499,8 @@ const controller = (() => {
             if (userBoard[Math.floor(i/9)][i%9] !== 0){
                 const tempNode = cells[i].cloneNode(true);
                 tempNode.firstChild.textContent = `${userBoard[Math.floor(i/9)][i%9]}`;
-                if (tempNode.classList.contains("cell_a")){
-                    tempNode.classList.remove("cell_a");
-                    tempNode.classList.add("cell_ap");
-                }
-                else if (tempNode.classList.contains("cell_b")){
-                    tempNode.classList.remove("cell_b");
-                    tempNode.classList.add("cell_bp");
-                }
+                tempNode.classList.remove("user-cell");
+                tempNode.classList.add("preloaded-cell");
                 cells[i].parentNode.replaceChild(tempNode, cells[i]);
             }
         }

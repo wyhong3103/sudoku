@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Manrope:wght@800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Lobster&family=Manrope:wght@800&display=swap');
+
 
 
 *{
@@ -48,18 +49,6 @@ html{
     --cellBColorD :  #94a3b8;
     --cellBColorE :  #cbd5e1;
 
-    --cellBPColorA : #78716c;
-    --cellBPColorB : #a8a29e;
-    --cellBPColorC : #d6d3d1;
-    --cellBPColorD : #e7e5e4;
-    --cellBPColorE : #f5f5f4;
-
-    --cellAPColorA : #404040;
-    --cellAPColorB : #525252;
-    --cellAPColorC : #737373;
-    --cellAPColorD : #a3a3a3;
-    --cellAPColorE : #d4d4d4;
-
     --gameA : rgb(247, 245, 226);
     --gameB : rgb(180, 172, 97);
 
@@ -69,6 +58,7 @@ html{
     --brownD : rgb(240, 232, 170);
     --titleFont :'Lobster', cursive; 
     --mainFont :'Manrope', sans-serif; 
+    --userCellFont : 'Caveat', cursive;
 }
 
 #content{
@@ -525,56 +515,22 @@ h1.title{
 }
 
 
-/*
-
-    PRELOADED CELL
-
-*/
-.cell_ap{
-    color : var(--cellAPColorA);
-    border: 2px solid var(--cellAPColorA);
-    background: var(--cellAPColorE);
-}
-
-.cell_ap::before{
-    background: var(--cellAPColorC);
-}
-
-.cell_ap:hover{
-    background: var(--cellAPColorD);
-}
-
-.cell_ap:active::before{
-    box-shadow: 0 0 0 2px var(--cellAPColorB), 0 0.25em 0 0 var(--celABPColorB);
-}
-
-.cell_bp{
-    color : var(--cellBPColorA);
-    border: 2px solid var(--cellBPColorA);
-    background: var(--cellBPColorE);
-}
-
-.cell_bp::before{
-    background: var(--cellBPColorC);
-}
-
-.cell_bp:hover{
-    background: var(--cellBPColorD);
-}
-
-.cell_bp:active::before{
-    box-shadow: 0 0 0 2px var(--cellBPColorB), 0 0.25em 0 0 var(--cellBPColorB);
-}
-
 .cell {
     display:flex;
     justify-content: center;
     align-items: center;
 }
 
-.cell p{
-    font-size: 2.5rem;
+.user-cell p{
+    font-size : 3rem;
+    font-family: var(--userCellFont);
 }
+
+.preloaded-cell p{
+    font-size: 2.5rem;
+    font-family: var(--mainFont); 
+}
+
 
 .choice-popup-container{
     height : 100%;
