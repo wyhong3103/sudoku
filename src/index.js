@@ -6,6 +6,7 @@ let currentState = {};
 
 const game = (() => {
     const solBoard = [];
+    const initBoard = [];
     const userBoard = [];
     let time = 0;
 
@@ -95,10 +96,12 @@ const game = (() => {
         if (currentMode[0] === 0){
             for(let i = 0; i < 17; i++){
                 userBoard[Math.floor(chosen[i]/9)][chosen[i] % 9] = solBoard[Math.floor(chosen[i]/9)][chosen[i] % 9];
+                initBoard[Math.floor(chosen[i]/9)][chosen[i] % 9] = solBoard[Math.floor(chosen[i]/9)][chosen[i] % 9];
             }
         }else{
             for(let i = 0; i < currentMode[1]; i++){
                 userBoard[Math.floor(chosen[i]/9)][chosen[i] % 9] = solBoard[Math.floor(chosen[i]/9)][chosen[i] % 9];
+                initBoard[Math.floor(chosen[i]/9)][chosen[i] % 9] = solBoard[Math.floor(chosen[i]/9)][chosen[i] % 9];
             }
         }
     }
@@ -118,6 +121,13 @@ const game = (() => {
             }
             userBoard.push(temp);
         }
+        for(let i = 0; i < 9; i++){
+            const temp = [];
+            for(let j = 0; j < 9; j++){
+                temp.push(0);
+            }
+            initBoard.push(temp);
+        }
 
         const temp = [];
         for(let i = 1; i <= 9; i++){
@@ -135,8 +145,6 @@ const game = (() => {
 
         solveSudoku(0,0);
         fillUserBoard();
-        console.log(solBoard);
-        console.log(userBoard);
     }
 
     function addTime(){
@@ -146,10 +154,15 @@ const game = (() => {
         return time;
     }
 
+    function getUserBoard(){
+        return userBoard;
+    }
+
     return {
         addTime,
         getTime,
-        genBoard
+        genBoard,
+        getUserBoard
     }
 });
 
@@ -403,6 +416,17 @@ const controller = (() => {
         content.removeChild(content.lastChild);
     }
 
+    function setInitMenu(){
+        const proceedBtn = document.querySelector(".proceed-btn");
+        proceedBtn.addEventListener("click", ()=>{
+            function switchTo(){
+                view.mainMenu();
+                setMainMenu();
+            }
+            setTimeout(switchTo,175);
+        });
+    }
+
     function setMainMenu(){
         const modeBtn = document.querySelector(".mode-btn");
         modeBtn.addEventListener("click", () =>{
@@ -448,44 +472,6 @@ const controller = (() => {
             removeLastChild();
         });
     }
-    function setGameInterface(){
-        if (isInGame === false){
-            currentState = game();
-            currentState.genBoard();
-            isInGame = true;
-        }
-        const curTime = document.querySelector(".cur-time")
-        const timer = window.setInterval(()=>{
-            currentState.addTime();
-            curTime.textContent = `${Math.floor(currentState.getTime()/60)}m ${currentState.getTime()%60}s`;
-        }, 1000);
-
-
-        const exitBtn = document.querySelector("#exit");
-        exitBtn.addEventListener("click", () => {
-            function switchTo(){
-                currentState = {};
-                isInGame = false;
-                clearInterval(timer);
-                view.mainMenu();
-                setMainMenu();
-            }
-            setTimeout(switchTo, 175);
-        });
-        
-        const cells = document.querySelectorAll(".cell");
-
-        cells.forEach(cell => {
-            cell.addEventListener("click", ()=>{
-                function showPopUp(){
-                    view.hideBg();
-                    view.choicePopUp();
-                    setChoicePopUp();
-                };
-                setTimeout(showPopUp, 175);
-            })
-        });
-    }
 
     function setChoicePopUp(){
         const choices = document.querySelectorAll(".choice");
@@ -503,16 +489,59 @@ const controller = (() => {
                 removeLastChild();
         })
     }
+    
+    function fillBoard(){
+        const userBoard = currentState.getUserBoard();
+        const cells = document.querySelectorAll(".cell");
+        for(let i = 0; i < 81; i++){
+            if (userBoard[Math.floor(i/9)][i%9] !== 0){
+                const tempNode = cells[i].cloneNode(true);
+                tempNode.firstChild.textContent = `${userBoard[Math.floor(i/9)][i%9]}`;
+                cells[i].parentNode.replaceChild(tempNode, cells[i]);
+            }
+        }
+    }
 
-    function setInitMenu(){
-        const proceedBtn = document.querySelector(".proceed-btn");
-        proceedBtn.addEventListener("click", ()=>{
+    function setGameInterface(){
+        const cells = document.querySelectorAll(".cell");
+
+        cells.forEach(cell => {
+            cell.addEventListener("click", ()=>{
+                function showPopUp(){
+                    view.hideBg();
+                    view.choicePopUp();
+                    setChoicePopUp();
+                };
+                setTimeout(showPopUp, 175);
+            })
+        });
+
+        if (isInGame === false){
+            isInGame = true;
+            currentState = game();
+            currentState.genBoard();
+            fillBoard();
+        }
+
+        const curTime = document.querySelector(".cur-time")
+        const timer = window.setInterval(()=>{
+            currentState.addTime();
+            curTime.textContent = `${Math.floor(currentState.getTime()/60)}m ${currentState.getTime()%60}s`;
+        }, 1000);
+
+        const exitBtn = document.querySelector("#exit");
+        exitBtn.addEventListener("click", () => {
             function switchTo(){
+                currentState = {};
+                isInGame = false;
+                clearInterval(timer);
                 view.mainMenu();
                 setMainMenu();
             }
-            setTimeout(switchTo,175);
+            setTimeout(switchTo, 175);
         });
+        
+
     }
 
     function init(){
