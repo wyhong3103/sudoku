@@ -5,8 +5,114 @@ let isInGame = false;
 let currentState = {};
 
 const game = (() => {
-    const board = [];
+    const solBoard = [];
+    const userBoard = [];
     let time = 0;
+
+    function shuffle(array){
+        let currentIndex = array.length; let  randomIndex;
+
+        while (currentIndex != 0) {
+
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // eslint-disable-next-line no-param-reassign
+            [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+        }
+
+        return array;
+    }
+
+    function solveSudoku(i, j){
+        if (solBoard[i][j] !== 0){
+            if (j+1 < 9){
+                return solveSudoku(i,j+1);
+            }
+            if (i+1 < 9){
+                return solveSudoku(i+1,0);
+            }
+            return true;
+        }
+
+        const available = [];
+        for(let k = 0; k < 9; k++){
+            available.push(true);
+        }
+
+        // row
+        for(let k = 0; k < 9; k++){
+            if (solBoard[i][k] !== 0){
+                available[solBoard[i][k]-1] = false;
+            }
+        }
+
+        // col
+        for(let k = 0; k < 9; k++){
+            if (solBoard[k][j] !== 0){
+                available[solBoard[k][j]-1] = false;
+            }
+        }
+
+        // 3x3
+        for(let k = 0; k < 3; k++){
+            for(let l = 0; l < 3; l++){
+                const curVal = solBoard[(Math.floor(i/3)*3)+k][(Math.floor(j/3)*3)+l];
+                if (curVal !== 0){
+                    available[curVal-1] = false;
+                }
+            }
+        }
+
+        for(let k = 0; k < 9; k++){
+            if (available[k] === true){
+                solBoard[i][j] = k+1;
+                if (j+1 < 9){
+                    if (solveSudoku(i,j+1)){
+                        return true;
+                    }
+                    solBoard[i][j] = 0;
+                }
+                else if (i+1 < 9){
+                    if (solveSudoku(i+1,0)){
+                        return true;
+                    }
+                    solBoard[i][j] = 0;
+                }
+                else return true;
+            }
+        }
+        return false;
+    }
+
+    function genBoard(){
+        for(let i = 0; i < 9; i++){
+            const temp = [];
+            for(let j = 0; j < 9; j++){
+                temp.push(0);
+            }
+            solBoard.push(temp);
+            userBoard.push(temp);
+        }
+
+        const temp = [];
+        for(let i = 1; i <= 9; i++){
+            temp.push(i);
+        }
+
+        for(let i = 0; i < 3; i++){
+            shuffle(temp);
+            for(let j = 0; j < 3; j++){
+                for(let k = 0; k < 3; k++){
+                    solBoard[j+(i*3)][k+(i*3)] = temp[(j*3) + k];
+                }
+            }
+        }
+
+        solveSudoku(0,0);
+        console.log(solBoard);
+    }
 
     function addTime(){
         time += 1;
@@ -18,6 +124,7 @@ const game = (() => {
     return {
         addTime,
         getTime,
+        genBoard
     }
 });
 
@@ -319,6 +426,7 @@ const controller = (() => {
     function setGameInterface(){
         if (isInGame === false){
             currentState = game();
+            currentState.genBoard();
             isInGame = true;
         }
         const curTime = document.querySelector(".cur-time")
