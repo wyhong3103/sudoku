@@ -59,6 +59,12 @@ const view = (() => {
         content.appendChild(menu);
     }
 
+    function setMode(){
+        const modeBtn = document.querySelector(".mode-btn");
+        modeBtn.textContent = `Mode : ${currentMode[0] === 0 ? "Standard" : `Custom - ${currentMode[1]}`}`;
+        modeBtn.id = `${currentMode[0] === 0 ? "standard" : "custom"}`;
+    }
+
     function mainMenu(){
         content.innerHTML = "";
         const mainContainer = document.createElement("div");
@@ -71,8 +77,8 @@ const view = (() => {
         const modeBtn = document.createElement("button");
         modeBtn.classList.add("mode-btn");
         modeBtn.classList.add("big-button");
-        modeBtn.textContent = `Mode : ${(currentMode[0] === 0 ? "Standard" : `Custom - ${currentMode[1]}`)}`;
-        modeBtn.id = `${(currentMode[0] === 0 ? "standard" : "custom")}`;;
+        modeBtn.textContent = "Mode : Standard";
+        modeBtn.id = "standard";
 
         const startBtn = document.createElement("button");
         startBtn.classList.add("start-btn");
@@ -193,7 +199,7 @@ const view = (() => {
         timeText.textContent = "Elapsed Time :";
         const curTime = document.createElement("h4");
         curTime.classList.add("cur-time");
-        curTime.textContent = "0"
+        curTime.textContent = (isInGame === true ? `${currentState.getTime()}` : "0");
 
         timeContainer.appendChild(timeText);
         timeContainer.appendChild(curTime);
@@ -254,11 +260,17 @@ const view = (() => {
         mainMenu,
         modePopUp,
         choicePopUp,
-        gameInterface
+        gameInterface,
+        setMode
     };
 })();
 
 const controller = (() => {
+    function removeLastChild(){
+        const content = document.querySelector("#content");
+        content.removeChild(content.lastChild);
+    }
+
     function setMainMenu(){
         const modeBtn = document.querySelector(".mode-btn");
         modeBtn.addEventListener("click", () =>{
@@ -291,15 +303,17 @@ const controller = (() => {
         const standardContainer = document.querySelector(".standard-text");
         standardContainer.addEventListener("click", () => {
             currentMode[0] = 0;
-            view.mainMenu();
-            setMainMenu()
+            view.setMode();
+            removeLastChild();
+            removeLastChild();
         });
 
         const customLeft = document.querySelector(".custom-text-left");
         customLeft.addEventListener("click", () => {
             currentMode[0] = 1;
-            view.mainMenu();
-            setMainMenu()
+            view.setMode();
+            removeLastChild();
+            removeLastChild();
         });
     }
     function setGameInterface(){
@@ -307,16 +321,20 @@ const controller = (() => {
             currentState = game();
             isInGame = true;
         }
-
         const curTime = document.querySelector(".cur-time")
-        window.setInterval(()=>{
+        console.log("here");
+        const timer = window.setInterval(()=>{
             currentState.addTime();
             curTime.textContent = `${currentState.getTime()}`;
         }, 1000);
 
+
         const exitBtn = document.querySelector("#exit");
         exitBtn.addEventListener("click", () => {
             function switchTo(){
+                currentState = {};
+                isInGame = false;
+                clearInterval(timer);
                 view.mainMenu();
                 setMainMenu();
             }
@@ -339,16 +357,18 @@ const controller = (() => {
 
     function setChoicePopUp(){
         const choices = document.querySelectorAll(".choice");
+        
+
         choices.forEach(item => {
             item.addEventListener("click", ()=>{
-                view.gameInterface();
-                setGameInterface()    
+                removeLastChild();
+                removeLastChild();
             })
         });
         const unsetBtn = document.querySelector(".unset-btn");
         unsetBtn.addEventListener("click", ()=>{
-                view.gameInterface();
-                setGameInterface()    
+                removeLastChild();
+                removeLastChild();
         })
     }
 
