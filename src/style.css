@@ -29,11 +29,17 @@ html{
     --customColorD : #bfdbfe;
     --customColorE : #dbeafe;
 
-    --exitColorA : #ef4444;
-    --exitColorB : #f87171;
-    --exitColorC : #fca5a5;
-    --exitColorD : #fecaca;
-    --exitColorE : #fee2e2;
+    --redColorA : #ef4444;
+    --redColorB : #f87171;
+    --redColorC : #fca5a5;
+    --redColorD : #fecaca;
+    --redColorE : #fee2e2;
+
+    --greenColorA : #22c55e;
+    --greenColorB : #4ade80;
+    --greenColorC : #86efac;
+    --greenColorD : #bbf7d0;
+    --greenColorE : #dcfce7;
 
     --cellAColorA : #64748b;
     --cellAColorB : #94a3b8;
@@ -367,21 +373,21 @@ h1.title{
 }
 
 #exit{
-    color : var(--exitColorA);
-    border : 2px solid var(--exitColorA);
-    background : var(--exitColorE);
+    color : var(--redColorA);
+    border : 2px solid var(--redColorA);
+    background : var(--redColorE);
 }
 
 #exit::before{
-    background: var(--exitColorC);
+    background: var(--redColorC);
 }
 
 #exit:hover{
-    background: var(--exitColorD);
+    background: var(--redColorD);
 }
 
 #exit:active::before{
-    box-shadow: 0 0 0 2px var(--exitColorB), 0 0.25em 0 0 var(--exitColorB);
+    box-shadow: 0 0 0 2px var(--redColorB), 0 0.25em 0 0 var(--redColorB);
 }
 
 .game-board-container{
@@ -518,6 +524,42 @@ h1.title{
 .preloaded-cell p{
     font-size: 2.5rem;
     font-family: var(--mainFont); 
+}
+
+#g-hint{
+    color : var(--greenColorA);
+    border : 2px solid var(--greenColorA);
+    background : var(--greenColorE);
+}
+
+#g-hint::before{
+    background: var(--greenColorC);
+}
+
+#g-hint:hover{
+    background: var(--greenColorD);
+}
+
+#g-hint:active::before{
+    box-shadow: 0 0 0 2px var(--greenColorB), 0 0.25em 0 0 var(--greenColorB);
+}
+
+#r-hint{
+    color : var(--redColorA);
+    border : 2px solid var(--redColorA);
+    background : var(--redColorE);
+}
+
+#r-hint::before{
+    background: var(--redColorC);
+}
+
+#r-hint:hover{
+    background: var(--redColorD);
+}
+
+#r-hint:active::before{
+    box-shadow: 0 0 0 2px var(--redColorB), 0 0.25em 0 0 var(--redColorB);
 }
 
 

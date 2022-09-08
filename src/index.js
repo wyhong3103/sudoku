@@ -163,41 +163,38 @@ const game = (() => {
 
     function getHint(){
         insertPuzzle();
+        const temp = [];
+        for(let i = 0; i < 81; i++){
+            temp.push(i);
+        }
+        shuffle(temp);
         
         // Fill out a correct cell
         if (solveSudoku(0,0)){
-            const temp = [];
             for(let i = 0; i < 81; i++){
-                temp.push(i);
-            }
-            shuffle(temp);
-
-            for(let i = 0; i < 81; i++){
-                if (userBoard[Math.floor(i/9)][i%9] === 0){
-                    initBoard[Math.floor(i/9)][i%9] = solBoard[Math.floor(i/9)][i%9];
-                    return [solBoard[Math.floor(i/9)][i%9],i];
+                if (userBoard[Math.floor(temp[i]/9)][temp[i]%9] === 0){
+                    initBoard[Math.floor(temp[i]/9)][temp[i]%9] = solBoard[Math.floor(temp[i]/9)][temp[i]%9];
+                    return [solBoard[Math.floor(temp[i]/9)][temp[i]%9],temp[i]];
                 }
             }
         }else{
-            let index = -1;
+            const index = -1;
 
             // Look for one mistakenly placed cell
-            for(let i = 0; i < 9; i++){
-                for(let j = 0; j < 9; j++){
-                    if (initBoard[i][j] === 0 && userBoard[i][j] !== 0){
-                        const temp = userBoard[i][j];
-                        userBoard[i][j] = 0;
-                        insertPuzzle();
-                        index = i*9 + j;
-                        if (solveSudoku(0,0)){
-                            return [-1, index];
-                        }
-                        userBoard[i][j] = temp;
+            for(let i = 0; i < 81; i++){
+                if (initBoard[Math.floor(temp[i]/9)][temp[i]%9] === 0 && userBoard[Math.floor(temp[i]/9)][temp[i]%9] !== 0){
+                    const tempVal = userBoard[Math.floor(temp[i]/9)][temp[i]%9];
+                    userBoard[Math.floor(temp[i]/9)][temp[i]%9] = 0;
+                    insertPuzzle();
+                    if (solveSudoku(0,0)){
+                        return [-1, temp[i]];
                     }
+                    userBoard[Math.floor(temp[i]/9)][temp[i]%9] = tempVal;
                 }
             }
             return [-1, index];
         }
+        return [-1,-1];
     }
 
     function addTime(){
@@ -616,6 +613,9 @@ const controller = (() => {
         const hintBtn = document.querySelector(".hint-btn");
         hintBtn.addEventListener("click", () => {
             const hint = currentState.getHint();
+            if (hint[0] === -1 && hint[1] === -1){
+                return;
+            }
             if (hint[0] === -1){
                 cells[hint[1]].firstChild.textContent = "";
                 currentState.setUserBoard(Math.floor(hint[1]/9), hint[1]%9, 0);
