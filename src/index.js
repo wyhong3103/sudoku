@@ -717,6 +717,9 @@ const controller = (() => {
 
         const ansBtn = document.querySelector(".ans-btn");
         ansBtn.addEventListener("click", () => {
+            if (currentState.isSolved()){
+                return;
+            }
             function showAns(){
                 currentState.getSol();
                 const userBoard = currentState.getUserBoard();
