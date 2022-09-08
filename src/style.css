@@ -517,7 +517,7 @@ h1.title{
 }
 
 .user-cell p{
-    font-size : 3rem;
+    font-size : 2.75rem;
     font-family: var(--userCellFont);
 }
 

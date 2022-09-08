@@ -111,6 +111,23 @@ const game = (() => {
         }
     }
 
+    function isSolved(){
+        let ok = true;
+        for(let i = 0; i < 9; i++){
+            for(let j = 0; j < 9; j++){
+                if (userBoard[i][j] === 0){
+                    ok = false;
+                }else{
+                    const temp = getAvailable(i, j, userBoard);
+                    for(let k = 0; k < 9; k++){
+                        if (temp[k] === true) ok = false;
+                    }
+                }
+            }
+        }
+        return ok;
+    }
+
     function genBoard(){
         for(let i = 0; i < 9; i++){
             const temp = [];
@@ -247,7 +264,8 @@ const game = (() => {
         setUserBoard,
         getAvailable,
         getHint,
-        getSol
+        getSol,
+        isSolved
     }
 });
 
@@ -560,6 +578,21 @@ const controller = (() => {
         });
     }
 
+    function clearTimer(){
+        // Get a reference to the last interval + 1
+        const intervalId = window.setInterval(()=> {}, Number.MAX_SAFE_INTEGER);
+
+        // Clear any timeout/interval up to that id
+        for (let i = 1; i < intervalId; i++) {
+            window.clearInterval(i);
+        }
+    }
+
+    function isSolved(){
+        clearTimer();
+        isInGame = false;
+    }
+
     function setChoicePopUp(i){
         const choices = document.querySelectorAll(".choice");
 
@@ -577,6 +610,9 @@ const controller = (() => {
                     currentState.setUserBoard(Math.floor(i/9), i%9, j+1);
                     removeLastChild();
                     removeLastChild();
+                    if (currentState.isSolved()){
+                        isSolved();
+                    }
                 });
             }
         }
@@ -622,15 +658,7 @@ const controller = (() => {
         }
     }
 
-    function clearTimer(){
-        // Get a reference to the last interval + 1
-        const intervalId = window.setInterval(()=> {}, Number.MAX_SAFE_INTEGER);
 
-        // Clear any timeout/interval up to that id
-        for (let i = 1; i < intervalId; i++) {
-            window.clearInterval(i);
-        }
-    }
 
     function setGameInterface(){
         const cells = document.querySelectorAll(".cell");
@@ -655,7 +683,7 @@ const controller = (() => {
         }
 
         const curTime = document.querySelector(".cur-time")
-        const timer = window.setInterval(()=>{
+        window.setInterval(()=>{
             currentState.addTime();
             curTime.textContent = `${Math.floor(currentState.getTime()/60)}m ${currentState.getTime()%60}s`;
         }, 1000);
@@ -679,6 +707,10 @@ const controller = (() => {
                     currentState.setUserBoard(Math.floor(hint[1]/9), hint[1]%9, hint[0]);
                     setPreloadCell(hint[1]);
                 }
+
+                if (currentState.isSolved()){
+                    isSolved();
+                }
             }
             setTimeout(showHint, 175);
         });
@@ -695,7 +727,7 @@ const controller = (() => {
                         setPreloadCell((i*9) + j);
                     }
                 }
-                isInGame = false;
+                isSolved();
             }
             setTimeout(showAns, 175);
         });
