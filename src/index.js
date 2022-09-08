@@ -498,6 +498,14 @@ const controller = (() => {
             if (userBoard[Math.floor(i/9)][i%9] !== 0){
                 const tempNode = cells[i].cloneNode(true);
                 tempNode.firstChild.textContent = `${userBoard[Math.floor(i/9)][i%9]}`;
+                if (tempNode.classList.contains("cell_a")){
+                    tempNode.classList.remove("cell_a");
+                    tempNode.classList.add("cell_ap");
+                }
+                else if (tempNode.classList.contains("cell_b")){
+                    tempNode.classList.remove("cell_b");
+                    tempNode.classList.add("cell_bp");
+                }
                 cells[i].parentNode.replaceChild(tempNode, cells[i]);
             }
         }

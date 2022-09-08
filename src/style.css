@@ -42,11 +42,23 @@ html{
     --cellAColorD : #e2e8f0;
     --cellAColorE : #f1f5f9;
 
-    --cellBColorA : #0f172a;
-    --cellBColorB : #1e293b;
-    --cellBColorC : #334155;
-    --cellBColorD : #475569;
-    --cellBColorE : #64748b;
+    --cellBColorA :  #334155;
+    --cellBColorB :  #475569;
+    --cellBColorC :  #64748b;
+    --cellBColorD :  #94a3b8;
+    --cellBColorE :  #cbd5e1;
+
+    --cellBPColorA : #78716c;
+    --cellBPColorB : #a8a29e;
+    --cellBPColorC : #d6d3d1;
+    --cellBPColorD : #e7e5e4;
+    --cellBPColorE : #f5f5f4;
+
+    --cellAPColorA : #404040;
+    --cellAPColorB : #525252;
+    --cellAPColorC : #737373;
+    --cellAPColorD : #a3a3a3;
+    --cellAPColorE : #d4d4d4;
 
     --gameA : rgb(247, 245, 226);
     --gameB : rgb(180, 172, 97);
@@ -464,6 +476,12 @@ h1.title{
     transform: translate3d(0, 0, -1em);
 }
 
+/*
+
+    CELL STYLE FOR THE FIRST KIND
+
+*/
+
 .cell_a{
     color : var(--cellAColorA);
     border: 2px solid var(--cellAColorA);
@@ -482,6 +500,12 @@ h1.title{
     box-shadow: 0 0 0 2px var(--cellAColorB), 0 0.25em 0 0 var(--cellAColorB);
 }
 
+/*
+
+    CELL STYLE FOR THE SECOND KIND
+
+*/
+
 .cell_b{
     color : var(--cellBColorA);
     border: 2px solid var(--cellBColorA);
@@ -498,6 +522,48 @@ h1.title{
 
 .cell_b:active::before{
     box-shadow: 0 0 0 2px var(--cellBColorB), 0 0.25em 0 0 var(--cellBColorB);
+}
+
+
+/*
+
+    PRELOADED CELL
+
+*/
+.cell_ap{
+    color : var(--cellAPColorA);
+    border: 2px solid var(--cellAPColorA);
+    background: var(--cellAPColorE);
+}
+
+.cell_ap::before{
+    background: var(--cellAPColorC);
+}
+
+.cell_ap:hover{
+    background: var(--cellAPColorD);
+}
+
+.cell_ap:active::before{
+    box-shadow: 0 0 0 2px var(--cellAPColorB), 0 0.25em 0 0 var(--celABPColorB);
+}
+
+.cell_bp{
+    color : var(--cellBPColorA);
+    border: 2px solid var(--cellBPColorA);
+    background: var(--cellBPColorE);
+}
+
+.cell_bp::before{
+    background: var(--cellBPColorC);
+}
+
+.cell_bp:hover{
+    background: var(--cellBPColorD);
+}
+
+.cell_bp:active::before{
+    box-shadow: 0 0 0 2px var(--cellBPColorB), 0 0.25em 0 0 var(--cellBPColorB);
 }
 
 .cell {
