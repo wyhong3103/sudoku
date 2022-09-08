@@ -13,7 +13,7 @@ const game = (() => {
     function shuffle(array){
         let currentIndex = array.length; let  randomIndex;
 
-        while (currentIndex != 0) {
+        while (currentIndex !== 0) {
 
             randomIndex = Math.floor(Math.random() * currentIndex);
             currentIndex -= 1;
@@ -92,7 +92,7 @@ const game = (() => {
         return false;
     }
 
-    function fillUserBoard(){
+    function fillBoard(){
         const chosen = [];
         for(let i = 0; i < 81; i++){
             chosen.push(i);
@@ -149,7 +149,55 @@ const game = (() => {
         }
 
         solveSudoku(0,0);
-        fillUserBoard();
+        fillBoard();
+    }
+
+    function insertPuzzle(){
+        // Let the board that is going to be solved be the puzzle
+        for(let i = 0; i < 9; i++){
+            for(let j = 0; j < 9; j++){
+                solBoard[i][j] = userBoard[i][j];
+            }
+        }
+    }
+
+    function getHint(){
+        insertPuzzle();
+        
+        // Fill out a correct cell
+        if (solveSudoku(0,0)){
+            const temp = [];
+            for(let i = 0; i < 81; i++){
+                temp.push(i);
+            }
+            shuffle(temp);
+
+            for(let i = 0; i < 81; i++){
+                if (userBoard[Math.floor(i/9)][i%9] === 0){
+                    initBoard[Math.floor(i/9)][i%9] = solBoard[Math.floor(i/9)][i%9];
+                    return [solBoard[Math.floor(i/9)][i%9],i];
+                }
+            }
+        }else{
+            let index = -1;
+
+            // Look for one mistakenly placed cell
+            for(let i = 0; i < 9; i++){
+                for(let j = 0; j < 9; j++){
+                    if (initBoard[i][j] === 0 && userBoard[i][j] !== 0){
+                        const temp = userBoard[i][j];
+                        userBoard[i][j] = 0;
+                        insertPuzzle();
+                        index = i*9 + j;
+                        if (solveSudoku(0,0)){
+                            return [-1, index];
+                        }
+                        userBoard[i][j] = temp;
+                    }
+                }
+            }
+            return [-1, index];
+        }
     }
 
     function addTime(){
@@ -173,7 +221,8 @@ const game = (() => {
         genBoard,
         getUserBoard,
         setUserBoard,
-        getAvailable
+        getAvailable,
+        getHint
     }
 });
 
@@ -516,17 +565,23 @@ const controller = (() => {
                 removeLastChild();
         })
     }
+
+    function setPreloadCell(i){
+        const cells = document.querySelectorAll(".cell");
+        const tempNode = cells[i].cloneNode(true);
+        tempNode.classList.remove("user-cell");
+        tempNode.classList.add("preloaded-cell");
+        cells[i].parentNode.replaceChild(tempNode, cells[i]);
+    }
+
     
     function fillBoard(){
         const userBoard = currentState.getUserBoard();
         const cells = document.querySelectorAll(".cell");
         for(let i = 0; i < 81; i++){
             if (userBoard[Math.floor(i/9)][i%9] !== 0){
-                const tempNode = cells[i].cloneNode(true);
-                tempNode.firstChild.textContent = `${userBoard[Math.floor(i/9)][i%9]}`;
-                tempNode.classList.remove("user-cell");
-                tempNode.classList.add("preloaded-cell");
-                cells[i].parentNode.replaceChild(tempNode, cells[i]);
+                cells[i].firstChild.textContent = `${userBoard[Math.floor(i/9)][i%9]}`;
+                setPreloadCell(i);
             }
         }
     }
@@ -557,6 +612,19 @@ const controller = (() => {
             currentState.addTime();
             curTime.textContent = `${Math.floor(currentState.getTime()/60)}m ${currentState.getTime()%60}s`;
         }, 1000);
+
+        const hintBtn = document.querySelector(".hint-btn");
+        hintBtn.addEventListener("click", () => {
+            const hint = currentState.getHint();
+            if (hint[0] === -1){
+                cells[hint[1]].firstChild.textContent = "";
+                currentState.setUserBoard(Math.floor(hint[1]/9), hint[1]%9, 0);
+            }else{
+                cells[hint[1]].firstChild.textContent = `${hint[0]}`;
+                currentState.setUserBoard(Math.floor(hint[1]/9), hint[1]%9, hint[0]);
+                setPreloadCell(hint[1]);
+            }
+        });
 
         const exitBtn = document.querySelector("#exit");
         exitBtn.addEventListener("click", () => {

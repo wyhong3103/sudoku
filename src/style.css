@@ -533,7 +533,7 @@ h1.title{
 .choice-popup{
     height : 50rem;
     width : 40rem;
-    background-color : var(--colorShadeD);
+    background-color : var(--colorShadeE);
     border-radius : 1rem;
     padding : 2rem;
     display: flex;
@@ -566,7 +566,7 @@ h1.title{
     background-color : var(--colorShadeB);
 }
 .active{
-    background-color : var(--colorShadeC);
+    background-color : var(--colorShadeD);
 }
 
 
@@ -574,7 +574,7 @@ h1.title{
     padding : 1rem;
     height : 7rem;
     grid-row: -1;
-    background-color : var(--colorShadeC);
+    background-color : var(--colorShadeD);
     border-radius: 1rem;
     font-size: 3rem;
     display: flex;
@@ -585,6 +585,6 @@ h1.title{
 
 .active:hover, .unset-btn:hover{
     cursor: pointer;
-    background-color : var(--colorShadeB);
+    background-color : var(--colorShadeC);
 }
 
