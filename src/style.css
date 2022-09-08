@@ -11,8 +11,6 @@
 html{
     font-size : 10px;
 
-    --backgroundColor: rgba(246, 241, 209);
-    --backgroundColorA: rgb(250, 247, 223);
     --colorShadeA: #64748b;
     --colorShadeB: #94a3b8;
     --colorShadeC: #cbd5e1;
@@ -49,13 +47,6 @@ html{
     --cellBColorD :  #94a3b8;
     --cellBColorE :  #cbd5e1;
 
-    --gameA : rgb(247, 245, 226);
-    --gameB : rgb(180, 172, 97);
-
-    --brownA : rgb(61, 54, 12);
-    --brownB : rgb(255, 252, 233);
-    --brownC : rgb(225, 217, 160);
-    --brownD : rgb(240, 232, 170);
     --titleFont :'Lobster', cursive; 
     --mainFont :'Manrope', sans-serif; 
     --userCellFont : 'Caveat', cursive;
@@ -65,7 +56,7 @@ html{
     height: 100vh;
     width : 100vw;
     font-family: var(--mainFont);
-    background-color: var(--backgroundColor);
+    background-color: var(--colorShadeD);
     overflow: auto;
 }
 
@@ -95,8 +86,8 @@ html{
 
 .init-menu label, .init-menu input{
     font-size : 3rem;
-    color : var(--brownA);
-    font-family: var(--mainFont);
+    color : var(--colorShadeA);
+    font-family: var(--colorShadeA);
 }
 
 .init-menu input{
@@ -104,7 +95,7 @@ html{
     outline: none;
     border: none;
     padding : 1.5rem;
-    background-color : var(--brownB);
+    background-color : var(--colorShadeC);
 }
 
 .proceed-btn{
@@ -195,7 +186,7 @@ button.big-button:active::before {
 h1.title{
     font-size : 10rem;
     font-family: var(--titleFont);
-    color : var(--brownA);
+    color : var(--colorShadeA);
 }
 
 
@@ -259,7 +250,7 @@ h1.title{
     position: absolute;
     height : 35rem;
     width : 100rem;
-    background-color : var(--backgroundColor);
+    background-color : var(--colorShadeD);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -274,7 +265,7 @@ h1.title{
 }
 .mode-pop-up h1{
     font-size : 5rem;
-    color : var(--brownA);
+    color : var(--colorShadeA);
     text-align: center;
 }
 
@@ -298,7 +289,7 @@ h1.title{
 }
 
 .custom-text{
-    background-color: var(--customColorE);
+    background-color: var(--customColorD);
     color : var(--customColorA);
     transition : all 0.3s;
     display: flex;
@@ -345,7 +336,7 @@ h1.title{
     grid-row: 1 / 2;
     font-size : 7rem;
     font-family: var(--titleFont);
-    color : var(--brownA);
+    color : var(--colorShadeA);
     text-align: center;
 }
 
@@ -366,13 +357,13 @@ h1.title{
 }
 
 .time{
-    background-color : var(--backgroundColorA);
+    background-color : var(--colorShadeC);
     padding : 2rem;
     border-radius: 1rem;
 }
 
 .time h4{
-    color : var(--brownA);
+    color : var(--colorShadeA);
 }
 
 #exit{
@@ -417,8 +408,6 @@ h1.title{
 */
 
 .cell{
-    background-color : var(--gameA);
-    border : 1px solid var(--gameB);
     position: relative;
     display: inline-block;
     cursor: pointer;
@@ -544,13 +533,13 @@ h1.title{
 .choice-popup{
     height : 50rem;
     width : 40rem;
-    background-color : var(--backgroundColorA);
+    background-color : var(--colorShadeD);
     border-radius : 1rem;
     padding : 2rem;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    color : var(--cellAColorA);
+    color : var(--colorShadeA);
 }
 
 .choice-container{
@@ -574,10 +563,10 @@ h1.title{
 }
 
 .inactive{
-    background-color : var(--cellAColorB);
+    background-color : var(--colorShadeB);
 }
 .active{
-    background-color : var(--cellAColorE);
+    background-color : var(--colorShadeC);
 }
 
 
@@ -585,7 +574,7 @@ h1.title{
     padding : 1rem;
     height : 7rem;
     grid-row: -1;
-    background-color : var(--cellAColorE);
+    background-color : var(--colorShadeC);
     border-radius: 1rem;
     font-size: 3rem;
     display: flex;
@@ -596,6 +585,6 @@ h1.title{
 
 .active:hover, .unset-btn:hover{
     cursor: pointer;
-    background-color : var(--cellAColorC);
+    background-color : var(--colorShadeB);
 }
 
