@@ -222,6 +222,15 @@ const displayController = (() => {
                 }else cell.classList.add("cell_a");
                 const p = document.createElement("p");
                 cell.appendChild(p);
+
+                cell.addEventListener("click", ()=>{
+                    function showPopUp(){
+                        hideBg();
+                        choicePopUp();
+                    };
+                    setTimeout(showPopUp, 175);
+                });
+
                 gameBoard.appendChild(cell);
             }
         }
@@ -229,6 +238,37 @@ const displayController = (() => {
         gameContainer.appendChild(gameOption);
         gameContainer.appendChild(gameBoardContainer);
         content.appendChild(gameContainer);
+    }
+
+    function choicePopUp(){
+        const choicePopUpContainer = document.createElement("div");
+        choicePopUpContainer.classList.add("choice-popup-container");
+        const choicePopUpDiv = document.createElement("div");
+        choicePopUpDiv.classList.add("choice-popup")
+        choicePopUpContainer.appendChild(choicePopUpDiv);
+
+        const choiceContainer = document.createElement("div");
+        choiceContainer.classList.add("choice-container");
+        for(let i = 0; i < 9; i++){
+            const choice = document.createElement("div");
+            choice.classList.add("choice");
+            choice.classList.add("active");
+            choice.textContent = i+1;
+            choiceContainer.appendChild(choice);
+            choice.addEventListener("click", ()=>{
+                gameInterface();
+            })
+        }
+        choicePopUpDiv.appendChild(choiceContainer);
+
+        const unsetBtn = document.createElement("div");
+        unsetBtn.textContent = "UNSET";
+        unsetBtn.classList.add("unset-btn");
+        unsetBtn.addEventListener("click", ()=>{
+            gameInterface();
+        })
+        choicePopUpDiv.appendChild(unsetBtn);
+        content.appendChild(choicePopUpContainer);
     }
     
     function init(){
