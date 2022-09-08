@@ -161,6 +161,33 @@ const game = (() => {
         }
     }
 
+    function insertSol(){
+        for(let i = 0; i < 9; i++){
+            for(let j = 0; j < 9; j++){
+                userBoard[i][j] = solBoard[i][j];
+            }
+        }
+    }
+
+    function getSol(){
+        insertPuzzle();
+        for(let i = 0; i < 9; i++){
+            for(let j = 0; j < 9; j++){
+                if (!solveSudoku(0,0) && userBoard[i][j] !== 0 && initBoard[i][j] === 0){
+                    solBoard[i][j] = 0;
+                    userBoard[i][j] = 0;
+                }
+                if (solveSudoku(0,0)){
+                    break;
+                }
+            }
+            if (solveSudoku(0,0)){
+                break;
+            }
+        }
+        insertSol();
+    }
+
     function getHint(){
         insertPuzzle();
         const temp = [];
@@ -219,7 +246,8 @@ const game = (() => {
         getUserBoard,
         setUserBoard,
         getAvailable,
-        getHint
+        getHint,
+        getSol
     }
 });
 
@@ -644,6 +672,23 @@ const controller = (() => {
             }
             setTimeout(showHint, 175);
         });
+
+        const ansBtn = document.querySelector(".ans-btn");
+        ansBtn.addEventListener("click", () => {
+            function showAns(){
+                currentState.getSol();
+                const userBoard = currentState.getUserBoard();
+                const cellsTemp = document.querySelectorAll(".cell");
+                for(let i = 0; i < 9; i++){
+                    for(let j = 0; j < 9; j++){
+                        cellsTemp[(i*9) + j].firstChild.textContent = userBoard[i][j];
+                        setPreloadCell((i*9) + j);
+                    }
+                }
+            }
+            setTimeout(showAns, 175);
+        });
+        
 
         const exitBtn = document.querySelector("#exit");
         exitBtn.addEventListener("click", () => {
