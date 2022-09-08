@@ -26,6 +26,38 @@ const game = (() => {
         return array;
     }
 
+    function getAvailable(i, j, arr){
+        const available = [];
+        for(let k = 0; k < 9; k++){
+            available.push(true);
+        }
+
+        // row
+        for(let k = 0; k < 9; k++){
+            if (arr[i][k] !== 0){
+                available[arr[i][k]-1] = false;
+            }
+        }
+
+        // col
+        for(let k = 0; k < 9; k++){
+            if (arr[k][j] !== 0){
+                available[arr[k][j]-1] = false;
+            }
+        }
+
+        // 3x3
+        for(let k = 0; k < 3; k++){
+            for(let l = 0; l < 3; l++){
+                const curVal = arr[(Math.floor(i/3)*3)+k][(Math.floor(j/3)*3)+l];
+                if (curVal !== 0){
+                    available[curVal-1] = false;
+                }
+            }
+        }
+        return available;
+    }
+
     function solveSudoku(i, j){
         if (solBoard[i][j] !== 0){
             if (j+1 < 9){
@@ -37,34 +69,7 @@ const game = (() => {
             return true;
         }
 
-        const available = [];
-        for(let k = 0; k < 9; k++){
-            available.push(true);
-        }
-
-        // row
-        for(let k = 0; k < 9; k++){
-            if (solBoard[i][k] !== 0){
-                available[solBoard[i][k]-1] = false;
-            }
-        }
-
-        // col
-        for(let k = 0; k < 9; k++){
-            if (solBoard[k][j] !== 0){
-                available[solBoard[k][j]-1] = false;
-            }
-        }
-
-        // 3x3
-        for(let k = 0; k < 3; k++){
-            for(let l = 0; l < 3; l++){
-                const curVal = solBoard[(Math.floor(i/3)*3)+k][(Math.floor(j/3)*3)+l];
-                if (curVal !== 0){
-                    available[curVal-1] = false;
-                }
-            }
-        }
+        const available = getAvailable(i,j,solBoard);
 
         for(let k = 0; k < 9; k++){
             if (available[k] === true){
@@ -157,12 +162,18 @@ const game = (() => {
     function getUserBoard(){
         return userBoard;
     }
+    
+    function setUserBoard(i, j, selected){
+        userBoard[i][j] = selected;
+    }
 
     return {
         addTime,
         getTime,
         genBoard,
-        getUserBoard
+        getUserBoard,
+        setUserBoard,
+        getAvailable
     }
 });
 
@@ -475,18 +486,32 @@ const controller = (() => {
         });
     }
 
-    function setChoicePopUp(){
+    function setChoicePopUp(i){
         const choices = document.querySelectorAll(".choice");
+
+        const active = currentState.getAvailable(Math.floor(i/9), i%9, currentState.getUserBoard());
+
+        const cells = document.querySelectorAll(".cell");
+        for(let j = 0; j < 9; j++){
+            if (active[j] === false){
+                choices[j].classList.remove("active");
+                choices[j].classList.add("inactive");
+            }else{
+                // eslint-disable-next-line no-loop-func
+                choices[j].addEventListener("click", ()=>{
+                    cells[i].firstChild.textContent = `${j+1}`;
+                    currentState.setUserBoard(Math.floor(i/9), i%9, j+1);
+                    removeLastChild();
+                    removeLastChild();
+                });
+            }
+        }
         
 
-        choices.forEach(item => {
-            item.addEventListener("click", ()=>{
-                removeLastChild();
-                removeLastChild();
-            })
-        });
         const unsetBtn = document.querySelector(".unset-btn");
         unsetBtn.addEventListener("click", ()=>{
+                cells[i].firstChild.textContent = "";
+                currentState.setUserBoard(Math.floor(i/9), i%9, 0);
                 removeLastChild();
                 removeLastChild();
         })
@@ -509,16 +534,16 @@ const controller = (() => {
     function setGameInterface(){
         const cells = document.querySelectorAll(".cell");
 
-        cells.forEach(cell => {
-            cell.addEventListener("click", ()=>{
+        for(let i = 0; i < 81; i++){
+            cells[i].addEventListener("click", ()=>{
                 function showPopUp(){
                     view.hideBg();
                     view.choicePopUp();
-                    setChoicePopUp();
+                    setChoicePopUp(i);
                 };
                 setTimeout(showPopUp, 175);
             })
-        });
+        }
 
         if (isInGame === false){
             isInGame = true;
@@ -544,8 +569,6 @@ const controller = (() => {
             }
             setTimeout(switchTo, 175);
         });
-        
-
     }
 
     function init(){
