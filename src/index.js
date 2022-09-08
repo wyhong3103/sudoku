@@ -222,8 +222,6 @@ const view = (() => {
         const modeBtn = document.createElement("button");
         modeBtn.classList.add("mode-btn");
         modeBtn.classList.add("big-button");
-        modeBtn.textContent = "Mode : Standard";
-        modeBtn.id = "standard";
 
         const startBtn = document.createElement("button");
         startBtn.classList.add("start-btn");
@@ -234,6 +232,9 @@ const view = (() => {
         mainContainer.appendChild(modeBtn);
         mainContainer.appendChild(startBtn);
         content.appendChild(mainContainer);
+        
+        // Set current mode
+        setMode();
     }
     function hideBg(){
         const bg = document.createElement("div");
