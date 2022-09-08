@@ -178,7 +178,7 @@ const game = (() => {
                 }
             }
         }else{
-            const index = -1;
+            let index = -1;
 
             // Look for one mistakenly placed cell
             for(let i = 0; i < 81; i++){
@@ -186,6 +186,7 @@ const game = (() => {
                     const tempVal = userBoard[Math.floor(temp[i]/9)][temp[i]%9];
                     userBoard[Math.floor(temp[i]/9)][temp[i]%9] = 0;
                     insertPuzzle();
+                    index = temp[i];
                     if (solveSudoku(0,0)){
                         return [-1, temp[i]];
                     }
@@ -194,7 +195,6 @@ const game = (() => {
             }
             return [-1, index];
         }
-        return [-1,-1];
     }
 
     function addTime(){
@@ -583,12 +583,24 @@ const controller = (() => {
         }
     }
 
+    function clearHintCell(){
+        const ghint = document.querySelector("#g-hint");
+        const rhint = document.querySelector("#r-hint");
+        if (ghint){
+            ghint.id = "";
+        }
+        if (rhint){
+            rhint.id = "";
+        }
+    }
+
     function setGameInterface(){
         const cells = document.querySelectorAll(".cell");
 
         for(let i = 0; i < 81; i++){
             cells[i].addEventListener("click", ()=>{
                 function showPopUp(){
+                    clearHintCell();
                     view.hideBg();
                     view.choicePopUp();
                     setChoicePopUp(i);
@@ -612,18 +624,25 @@ const controller = (() => {
 
         const hintBtn = document.querySelector(".hint-btn");
         hintBtn.addEventListener("click", () => {
-            const hint = currentState.getHint();
-            if (hint[0] === -1 && hint[1] === -1){
-                return;
+            function showHint(){
+                clearHintCell();
+                const hint = currentState.getHint();
+                console.log(hint);
+                if (hint[0] === -1 && hint[1] === -1){
+                    return;
+                }
+                if (hint[0] === -1){
+                    cells[hint[1]].firstChild.textContent = "";
+                    cells[hint[1]].id = "r-hint";
+                    currentState.setUserBoard(Math.floor(hint[1]/9), hint[1]%9, 0);
+                }else{
+                    cells[hint[1]].firstChild.textContent = `${hint[0]}`;
+                    cells[hint[1]].id = "g-hint";
+                    currentState.setUserBoard(Math.floor(hint[1]/9), hint[1]%9, hint[0]);
+                    setPreloadCell(hint[1]);
+                }
             }
-            if (hint[0] === -1){
-                cells[hint[1]].firstChild.textContent = "";
-                currentState.setUserBoard(Math.floor(hint[1]/9), hint[1]%9, 0);
-            }else{
-                cells[hint[1]].firstChild.textContent = `${hint[0]}`;
-                currentState.setUserBoard(Math.floor(hint[1]/9), hint[1]%9, hint[0]);
-                setPreloadCell(hint[1]);
-            }
+            setTimeout(showHint, 175);
         });
 
         const exitBtn = document.querySelector("#exit");
