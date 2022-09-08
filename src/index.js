@@ -622,6 +622,16 @@ const controller = (() => {
         }
     }
 
+    function clearTimer(){
+        // Get a reference to the last interval + 1
+        const intervalId = window.setInterval(()=> {}, Number.MAX_SAFE_INTEGER);
+
+        // Clear any timeout/interval up to that id
+        for (let i = 1; i < intervalId; i++) {
+            window.clearInterval(i);
+        }
+    }
+
     function setGameInterface(){
         const cells = document.querySelectorAll(".cell");
 
@@ -685,17 +695,27 @@ const controller = (() => {
                         setPreloadCell((i*9) + j);
                     }
                 }
+                isInGame = false;
             }
             setTimeout(showAns, 175);
         });
         
+        const restartBtn = document.querySelector(".restart-btn");
+        restartBtn.addEventListener("click", () => {
+            function switchTo(){
+                isInGame = false;
+                clearTimer();
+                view.gameInterface();
+                setGameInterface();
+            }
+            setTimeout(switchTo, 175);
+        });
 
         const exitBtn = document.querySelector("#exit");
         exitBtn.addEventListener("click", () => {
             function switchTo(){
-                currentState = {};
                 isInGame = false;
-                clearInterval(timer);
+                clearTimer();
                 view.mainMenu();
                 setMainMenu();
             }
