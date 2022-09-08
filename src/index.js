@@ -86,6 +86,23 @@ const game = (() => {
         return false;
     }
 
+    function fillUserBoard(){
+        const chosen = [];
+        for(let i = 0; i < 81; i++){
+            chosen.push(i);
+        }
+        shuffle(chosen);
+        if (currentMode[0] === 0){
+            for(let i = 0; i < 17; i++){
+                userBoard[Math.floor(chosen[i]/9)][chosen[i] % 9] = solBoard[Math.floor(chosen[i]/9)][chosen[i] % 9];
+            }
+        }else{
+            for(let i = 0; i < currentMode[1]; i++){
+                userBoard[Math.floor(chosen[i]/9)][chosen[i] % 9] = solBoard[Math.floor(chosen[i]/9)][chosen[i] % 9];
+            }
+        }
+    }
+
     function genBoard(){
         for(let i = 0; i < 9; i++){
             const temp = [];
@@ -93,6 +110,12 @@ const game = (() => {
                 temp.push(0);
             }
             solBoard.push(temp);
+        }
+        for(let i = 0; i < 9; i++){
+            const temp = [];
+            for(let j = 0; j < 9; j++){
+                temp.push(0);
+            }
             userBoard.push(temp);
         }
 
@@ -111,7 +134,9 @@ const game = (() => {
         }
 
         solveSudoku(0,0);
+        fillUserBoard();
         console.log(solBoard);
+        console.log(userBoard);
     }
 
     function addTime(){
