@@ -1,8 +1,28 @@
 import './style.css';
 
 const currentMode = [0, 17];
+let isInGame = false;
+let currentState = {};
 
-const displayController = (() => { 
+const game = (() => {
+    const board = [];
+    let time = 0;
+
+    function addTime(){
+        time += 1;
+    }
+    function getTime(){
+        return time;
+    }
+
+    return {
+        addTime,
+        getTime,
+    }
+});
+
+
+const view = (() => { 
     const content = document.querySelector("#content");
 
     function initMenu(){
@@ -29,9 +49,6 @@ const displayController = (() => {
         btn.classList.add("big-button");
         btn.textContent = "PROCEED";
 
-        btn.addEventListener("click", ()=>{
-            setTimeout(mainMenu,175);
-        });
 
         usernameForm.appendChild(label);
         usernameForm.appendChild(inp);
@@ -56,21 +73,11 @@ const displayController = (() => {
         modeBtn.classList.add("big-button");
         modeBtn.textContent = `Mode : ${(currentMode[0] === 0 ? "Standard" : `Custom - ${currentMode[1]}`)}`;
         modeBtn.id = `${(currentMode[0] === 0 ? "standard" : "custom")}`;;
-        modeBtn.addEventListener("click", () =>{
-            const showPopUp = () => {
-                hideBg();
-                modePopUp();
-            };
-            setTimeout(showPopUp, 175);
-        });
 
         const startBtn = document.createElement("button");
         startBtn.classList.add("start-btn");
         startBtn.classList.add("big-button");
         startBtn.textContent = "Start";
-        startBtn.addEventListener("click", () => {
-            setTimeout(gameInterface, 175);
-        });
 
         mainContainer.appendChild(title);
         mainContainer.appendChild(modeBtn);
@@ -127,21 +134,6 @@ const displayController = (() => {
         const rangeValue = document.createElement("p");
         rangeValue.textContent = `${rangeSlider.value} clues`;
 
-        rangeSlider.addEventListener("input", () => {
-            const rangeVal = document.querySelector(".custom-text-right p");
-            const rangeSli = document.querySelector(".custom-text-right input");
-            rangeVal.textContent = `${rangeSli.value} clues`;
-            currentMode[1] = rangeSli.value;
-        });
-
-        standardContainer.addEventListener("click", () => {
-            currentMode[0] = 0;
-            mainMenu();
-        });
-        customLeft.addEventListener("click", () => {
-            currentMode[0] = 1;
-            mainMenu();
-        });
         
         customRight.appendChild(rangeSlider);
         customRight.appendChild(rangeValue);
@@ -157,8 +149,33 @@ const displayController = (() => {
         content.appendChild(container);
     }
 
+    function choicePopUp(){
+        const choicePopUpContainer = document.createElement("div");
+        choicePopUpContainer.classList.add("choice-popup-container");
+        const choicePopUpDiv = document.createElement("div");
+        choicePopUpDiv.classList.add("choice-popup")
+        choicePopUpContainer.appendChild(choicePopUpDiv);
+
+        const choiceContainer = document.createElement("div");
+        choiceContainer.classList.add("choice-container");
+        for(let i = 0; i < 9; i++){
+            const choice = document.createElement("div");
+            choice.classList.add("choice");
+            choice.classList.add("active");
+            choice.textContent = i+1;
+            choiceContainer.appendChild(choice);
+        }
+        choicePopUpDiv.appendChild(choiceContainer);
+
+        const unsetBtn = document.createElement("div");
+        unsetBtn.textContent = "UNSET";
+        unsetBtn.classList.add("unset-btn");
+        choicePopUpDiv.appendChild(unsetBtn);
+        content.appendChild(choicePopUpContainer);
+    }
+    
+
     function gameInterface(){
-        console.log("hi");
         content.innerHTML = "";
         const gameContainer = document.createElement("div");
         gameContainer.classList.add("game-container");
@@ -175,7 +192,8 @@ const displayController = (() => {
         const timeText = document.createElement("h4");
         timeText.textContent = "Elapsed Time :";
         const curTime = document.createElement("h4");
-        curTime.textContent = "0";
+        curTime.classList.add("cur-time");
+        curTime.textContent = "0"
 
         timeContainer.appendChild(timeText);
         timeContainer.appendChild(curTime);
@@ -183,7 +201,6 @@ const displayController = (() => {
         for(let i = 0; i < 4; i++){
             btns.push(document.createElement("button"));
             btns[i].classList.add("big-button");
-            btns[i]
         }
 
         btns[0].classList.add("hint-btn");
@@ -198,9 +215,6 @@ const displayController = (() => {
         btns[3].classList.add("exit-btn");
         btns[3].textContent = "Exit";
         btns[3].id = "exit";
-        btns[3].addEventListener("click", () => {
-            setTimeout(mainMenu, 175);
-        });
 
         gameOption.appendChild(timeContainer);
         for(let i = 0; i < 4; i++){
@@ -223,13 +237,6 @@ const displayController = (() => {
                 const p = document.createElement("p");
                 cell.appendChild(p);
 
-                cell.addEventListener("click", ()=>{
-                    function showPopUp(){
-                        hideBg();
-                        choicePopUp();
-                    };
-                    setTimeout(showPopUp, 175);
-                });
 
                 gameBoard.appendChild(cell);
             }
@@ -240,44 +247,130 @@ const displayController = (() => {
         content.appendChild(gameContainer);
     }
 
-    function choicePopUp(){
-        const choicePopUpContainer = document.createElement("div");
-        choicePopUpContainer.classList.add("choice-popup-container");
-        const choicePopUpDiv = document.createElement("div");
-        choicePopUpDiv.classList.add("choice-popup")
-        choicePopUpContainer.appendChild(choicePopUpDiv);
 
-        const choiceContainer = document.createElement("div");
-        choiceContainer.classList.add("choice-container");
-        for(let i = 0; i < 9; i++){
-            const choice = document.createElement("div");
-            choice.classList.add("choice");
-            choice.classList.add("active");
-            choice.textContent = i+1;
-            choiceContainer.appendChild(choice);
-            choice.addEventListener("click", ()=>{
-                gameInterface();
-            })
+    return {
+        hideBg,
+        initMenu,
+        mainMenu,
+        modePopUp,
+        choicePopUp,
+        gameInterface
+    };
+})();
+
+const controller = (() => {
+    function setMainMenu(){
+        const modeBtn = document.querySelector(".mode-btn");
+        modeBtn.addEventListener("click", () =>{
+            const showPopUp = () => {
+                view.hideBg();
+                view.modePopUp();
+                setModePopUp();
+            };
+            setTimeout(showPopUp, 175);
+        });
+        const startBtn = document.querySelector(".start-btn");
+        startBtn.addEventListener("click", () => {
+            function switchTo(){
+                view.gameInterface();
+                setGameInterface();
+            }
+            setTimeout(switchTo, 175);
+        });
+    }
+
+    function setModePopUp(){
+        const rangeSlider = document.querySelector(".custom-text-right input");
+        rangeSlider.addEventListener("input", () => {
+            const rangeVal = document.querySelector(".custom-text-right p");
+            const rangeSli = document.querySelector(".custom-text-right input");
+            rangeVal.textContent = `${rangeSli.value} clues`;
+            currentMode[1] = rangeSli.value;
+        });
+
+        const standardContainer = document.querySelector(".standard-text");
+        standardContainer.addEventListener("click", () => {
+            currentMode[0] = 0;
+            view.mainMenu();
+            setMainMenu()
+        });
+
+        const customLeft = document.querySelector(".custom-text-left");
+        customLeft.addEventListener("click", () => {
+            currentMode[0] = 1;
+            view.mainMenu();
+            setMainMenu()
+        });
+    }
+    function setGameInterface(){
+        if (isInGame === false){
+            currentState = game();
+            isInGame = true;
         }
-        choicePopUpDiv.appendChild(choiceContainer);
 
-        const unsetBtn = document.createElement("div");
-        unsetBtn.textContent = "UNSET";
-        unsetBtn.classList.add("unset-btn");
+        const curTime = document.querySelector(".cur-time")
+        window.setInterval(()=>{
+            currentState.addTime();
+            curTime.textContent = `${currentState.getTime()}`;
+        }, 1000);
+
+        const exitBtn = document.querySelector("#exit");
+        exitBtn.addEventListener("click", () => {
+            function switchTo(){
+                view.mainMenu();
+                setMainMenu();
+            }
+            setTimeout(switchTo, 175);
+        });
+        
+        const cells = document.querySelectorAll(".cell");
+
+        cells.forEach(cell => {
+            cell.addEventListener("click", ()=>{
+                function showPopUp(){
+                    view.hideBg();
+                    view.choicePopUp();
+                    setChoicePopUp();
+                };
+                setTimeout(showPopUp, 175);
+            })
+        });
+    }
+
+    function setChoicePopUp(){
+        const choices = document.querySelectorAll(".choice");
+        choices.forEach(item => {
+            item.addEventListener("click", ()=>{
+                view.gameInterface();
+                setGameInterface()    
+            })
+        });
+        const unsetBtn = document.querySelector(".unset-btn");
         unsetBtn.addEventListener("click", ()=>{
-            gameInterface();
+                view.gameInterface();
+                setGameInterface()    
         })
-        choicePopUpDiv.appendChild(unsetBtn);
-        content.appendChild(choicePopUpContainer);
     }
-    
+
+    function setInitMenu(){
+        const proceedBtn = document.querySelector(".proceed-btn");
+        proceedBtn.addEventListener("click", ()=>{
+            function switchTo(){
+                view.mainMenu();
+                setMainMenu();
+            }
+            setTimeout(switchTo,175);
+        });
+    }
+
     function init(){
-        initMenu();
-    }
+        view.initMenu();
+        setInitMenu();
+    }    
 
     return {
         init
     };
 })();
 
-displayController.init();
+controller.init();
