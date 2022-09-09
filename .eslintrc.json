@@ -15,6 +15,6 @@
   "rules": {
     "no-console": "off",
     "linebreak-style": ["error", "windows"],
-    "allowForLoopAfterthoughts": true
+    "no-plusplus": [2, { "allowForLoopAfterthoughts" : true }]
   }
 }
