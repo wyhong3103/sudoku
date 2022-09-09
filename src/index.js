@@ -13,6 +13,7 @@ const game = (() => {
     const initBoard = [];
     const userBoard = [];
     let time = 0;
+    let hintCnt = 0;
 
     function shuffle(array){
         let currentIndex = array.length; let  randomIndex;
@@ -210,6 +211,7 @@ const game = (() => {
     }
 
     function getHint(){
+        hintCnt += 1;
         insertPuzzle();
         const temp = [];
         for(let i = 0; i < 81; i++){
@@ -245,6 +247,10 @@ const game = (() => {
         }
     }
 
+    function getHintCnt(){
+        return hintCnt;
+    }
+
     function addTime(){
         time += 1;
     }
@@ -269,7 +275,8 @@ const game = (() => {
         getAvailable,
         getHint,
         getSol,
-        isSolved
+        isSolved,
+        getHintCnt
     }
 });
 
@@ -467,8 +474,30 @@ const view = (() => {
         detailContainer.appendChild(detailRight);
         content.appendChild(detailContainer);
     }
-    
 
+    function solvedPopup(){
+        const solvedContainer = document.createElement("div");
+        solvedContainer.classList.add('solved-container');
+
+        const solvedPop = document.createElement("div");
+        solvedPop.classList.add("solved-popup");
+        
+        const p = document.createElement("p");
+        const time = document.querySelector(".cur-time");
+        p.textContent = `Congratulation! You have solve the ${currentMode[0] === 0 ? "Standard" : `Custom - ${currentMode[1]}`} Puzzle with ${currentState.getHintCnt()} hints, in ${time.textContent}.`;
+
+        const continueBtn = document.createElement("div");
+        continueBtn.classList.add("continue-btn");
+
+        continueBtn.textContent = "CONTINUE";
+        
+        solvedPop.appendChild(p);
+        solvedPop.appendChild(continueBtn);
+        solvedContainer.appendChild(solvedPop);
+
+        content.appendChild(solvedContainer);
+    }
+    
     function gameInterface(){
         const gameContainer = document.createElement("div");
         gameContainer.classList.add("game-container");
@@ -551,7 +580,8 @@ const view = (() => {
         gameInterface,
         setMode,
         userDetails,
-        clearInnerHTML
+        clearInnerHTML,
+        solvedPopup
     };
 })();
 
@@ -671,6 +701,10 @@ const controller = (() => {
                     removeLastChild();
                     if (currentState.isSolved()){
                         isSolved();
+                        view.hideBg();
+                        view.solvedPopup();
+                        setSolvedPopup();
+                        updateSolvedCnt();
                     }
                 });
             }
@@ -717,6 +751,20 @@ const controller = (() => {
         }
     }
 
+    function updateSolvedCnt(){
+        const solvedCnt = document.querySelector(".solved-count");
+        solvedCnt.textContent = userData.solvedCnt;
+    }
+
+    function setSolvedPopup(){
+        const continueBtn = document.querySelector(".continue-btn");
+        continueBtn.addEventListener("click", ()=>{
+            userData.solvedCnt += 1;
+            updateSolvedCnt();
+            removeLastChild();
+            removeLastChild();
+        });
+    }
 
 
     function setGameInterface(){
@@ -752,7 +800,6 @@ const controller = (() => {
             function showHint(){
                 clearHintCell();
                 const hint = currentState.getHint();
-                console.log(hint);
                 if (hint[0] === -1 && hint[1] === -1){
                     return;
                 }
@@ -769,6 +816,9 @@ const controller = (() => {
 
                 if (currentState.isSolved()){
                     isSolved();
+                    view.hideBg();
+                    view.solvedPopup();
+                    setSolvedPopup();
                 }
             }
             setTimeout(showHint, 175);
