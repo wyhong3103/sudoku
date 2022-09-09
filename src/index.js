@@ -9,9 +9,9 @@ const userData = {
 let currentState = {};
 
 const game = (() => {
-    const solBoard = [];
-    const initBoard = [];
-    const userBoard = [];
+    let solBoard = [];
+    let initBoard = [];
+    let userBoard = [];
     let time = 0;
     let hintCnt = 0;
 
@@ -261,7 +261,34 @@ const game = (() => {
     function getUserBoard(){
         return userBoard;
     }
+
+    function getSolBoard(){
+        return solBoard;
+    }
+    function getInitBoard(){
+        return initBoard;
+    }
+
+    function replUserBoard(arr){
+        userBoard = arr;
+    }
+
+    function replSolBoard(arr){
+        solBoard = arr;
+    }
+
+    function replInitBoard(arr){
+        initBoard = arr;
+    }
     
+    function replTime(n){
+        time = n;
+    }
+    
+    function replHintCnt(n){
+        hintCnt = n;
+    }
+
     function setUserBoard(i, j, selected){
         userBoard[i][j] = selected;
     }
@@ -271,14 +298,81 @@ const game = (() => {
         getTime,
         genBoard,
         getUserBoard,
+        getHintCnt,
+        getSolBoard,
+        getInitBoard,
+        replUserBoard,
+        replSolBoard,
+        replInitBoard,
+        replTime,
+        replHintCnt,
         setUserBoard,
         getAvailable,
         getHint,
         getSol,
         isSolved,
-        getHintCnt
     }
 });
+
+const sudokuStorage = (() => {
+    let firstTime = true;
+    let state = localStorage.getItem('sudokuStorage');
+
+    function saveState(){
+        state.username = userData.username;
+        state.solvedCnt = userData.solvedCnt;
+        state.isInGame = isInGame;
+        if (isInGame === true){
+            state.solBoard = currentState.getSolBoard();
+            state.initBoard = currentState.getInitBoard();
+            state.userBoard = currentState.getUserBoard();
+            state.elapsedTime = currentState.getTime();
+            state.hintCnt = currentState.getHintCnt();
+        }
+        localStorage.setItem("sudokuStorage", JSON.stringify(state));
+    }
+
+    function transferState(){
+        userData.username = state.username;
+        userData.solvedCnt = state.solvedCnt;
+        isInGame = state.isInGame;
+        if (isInGame === true){
+            currentState = game();
+            currentState.replSolBoard(state.solBoard);
+            currentState.replInitBoard(state.initBoard);
+            currentState.replUserBoard(state.userBoard);
+            currentState.replTime(state.elapsedTime);
+            currentState.replHintCnt(state.hintCnt);
+        }
+    }
+
+    function checkFirstTime(){
+        if (state !== null){
+            firstTime = false;
+            state = JSON.parse(state);
+            transferState();
+        }else{
+            state = {
+                "username" : "",
+                "solvedCnt" : 0,
+                "isInGame" : false,
+                "solBoard" : [],
+                "initBoard" : [],
+                "userBoard" : [],
+                "elapsedTime" : 0,
+                "hintCnt" : 0
+            };
+        }
+    }
+
+    checkFirstTime();
+
+    return {
+        firstTime,
+        saveState
+    }
+})();
+
 
 
 const view = (() => { 
@@ -611,6 +705,7 @@ const controller = (() => {
             function switchTo(){
                 view.clearInnerHTML();
                 userData.username = inp.value;
+                sudokuStorage.saveState();
                 setUserDetail();
                 view.mainMenu();
                 setMainMenu();
@@ -680,6 +775,7 @@ const controller = (() => {
     function isSolved(){
         clearTimer();
         isInGame = false;
+        sudokuStorage.saveState();
     }
 
     function setChoicePopUp(i){
@@ -704,7 +800,7 @@ const controller = (() => {
                         view.hideBg();
                         view.solvedPopup();
                         setSolvedPopup();
-                        updateSolvedCnt();
+                        sudokuStorage.saveState();
                     }
                 });
             }
@@ -731,11 +827,12 @@ const controller = (() => {
     
     function fillBoard(){
         const userBoard = currentState.getUserBoard();
+        const initBoard = currentState.getInitBoard();
         const cells = document.querySelectorAll(".cell");
         for(let i = 0; i < 81; i++){
             if (userBoard[Math.floor(i/9)][i%9] !== 0){
                 cells[i].firstChild.textContent = `${userBoard[Math.floor(i/9)][i%9]}`;
-                setPreloadCell(i);
+                if (initBoard[Math.floor(i/9)][i%9] !== 0) setPreloadCell(i);
             }
         }
     }
@@ -758,9 +855,10 @@ const controller = (() => {
 
     function setSolvedPopup(){
         const continueBtn = document.querySelector(".continue-btn");
+        userData.solvedCnt += 1;
+        updateSolvedCnt();
+        sudokuStorage.saveState();
         continueBtn.addEventListener("click", ()=>{
-            userData.solvedCnt += 1;
-            updateSolvedCnt();
             removeLastChild();
             removeLastChild();
         });
@@ -786,13 +884,14 @@ const controller = (() => {
             isInGame = true;
             currentState = game();
             currentState.genBoard();
-            fillBoard();
         }
+        fillBoard();
 
         const curTime = document.querySelector(".cur-time")
         window.setInterval(()=>{
             currentState.addTime();
             curTime.textContent = `${Math.floor(currentState.getTime()/60)}m ${currentState.getTime()%60}s`;
+            sudokuStorage.saveState();
         }, 1000);
 
         const hintBtn = document.querySelector(".hint-btn");
@@ -820,6 +919,7 @@ const controller = (() => {
                     view.solvedPopup();
                     setSolvedPopup();
                 }
+                sudokuStorage.saveState();
             }
             setTimeout(showHint, 175);
         });
@@ -854,6 +954,7 @@ const controller = (() => {
                 setUserDetail();
                 view.gameInterface();
                 setGameInterface();
+                sudokuStorage.saveState();
             }
             setTimeout(switchTo, 175);
         });
@@ -863,6 +964,7 @@ const controller = (() => {
             function switchTo(){
                 isInGame = false;
                 clearTimer();
+                sudokuStorage.saveState();
                 view.clearInnerHTML();
                 setUserDetail();
                 view.mainMenu();
@@ -873,9 +975,21 @@ const controller = (() => {
     }
 
     function init(){
-        view.clearInnerHTML();
-        view.initMenu();
-        setInitMenu();
+        if (sudokuStorage.firstTime === true){
+            view.clearInnerHTML();
+            view.initMenu();
+            setInitMenu();
+        }else if (isInGame === false){
+            view.clearInnerHTML();
+            setUserDetail();
+            view.mainMenu();
+            setMainMenu();
+        }else{
+            view.clearInnerHTML();
+            setUserDetail();
+            view.gameInterface();
+            setGameInterface();
+        }
     }    
 
     return {
