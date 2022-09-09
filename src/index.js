@@ -593,8 +593,12 @@ const view = (() => {
     }
     
     function gameInterface(){
+        const mainContainer = document.createElement("div");
+        mainContainer.classList.add("main-container");
+
         const gameContainer = document.createElement("div");
         gameContainer.classList.add("game-container");
+        mainContainer.appendChild(gameContainer);
 
         const gameTitle = document.createElement("h1");
         gameTitle.classList.add("game-title");
@@ -661,7 +665,7 @@ const view = (() => {
         gameContainer.appendChild(gameTitle);
         gameContainer.appendChild(gameOption);
         gameContainer.appendChild(gameBoardContainer);
-        content.appendChild(gameContainer);
+        content.appendChild(mainContainer);
     }
 
 
