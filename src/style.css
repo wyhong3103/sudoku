@@ -362,20 +362,55 @@ h1.title{
 
 */
 
+@media (min-width : 1001px){
+    .game-container{
+        height : 100%;
+        width : 100%;
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        grid-template-rows: repeat(10, 1fr);
+    }
+    .game-options{
+        grid-row: 2 / -1;
+        grid-column : 1 / 3;   
+    }
+
+    .game-title{
+        grid-column: 1 / -1;
+        grid-row: 1 / 2;
+    }
+
+    .game-board-container{
+        grid-row: 2 / -1;
+        grid-column: 3 / -1;
+    }
+}
+
+@media (max-width : 1000px){
+    #content{
+        height : 140rem;
+    }
+    .game-container{
+        width : 100%;
+        margin-top : 7rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap : 2rem;
+    }
+
+    .game-options{
+        order : 2;
+    }
+}
+
 .game-container{
     position : absolute;
-    height : 100%;
-    width : 100%;
     padding : 2rem 15rem 2rem 15rem;
-
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(10, 1fr);
 }
 
 .game-title{
-    grid-column: 1 / -1;
-    grid-row: 1 / 2;
     font-size : 7rem;
     font-family: var(--titleFont);
     color : var(--colorShadeA);
@@ -383,8 +418,6 @@ h1.title{
 }
 
 .game-options{
-    grid-row: 2 / -1;
-    grid-column : 1 / 3;   
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -427,8 +460,6 @@ h1.title{
 }
 
 .game-board-container{
-    grid-row: 2 / -1;
-    grid-column: 3 / -1;
     padding : 2rem;
     display: flex;
     justify-content: center;
