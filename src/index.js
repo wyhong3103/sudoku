@@ -795,12 +795,12 @@ const controller = (() => {
                     currentState.setUserBoard(Math.floor(i/9), i%9, j+1);
                     removeLastChild();
                     removeLastChild();
+                    sudokuStorage.saveState();
                     if (currentState.isSolved()){
                         isSolved();
                         view.hideBg();
                         view.solvedPopup();
                         setSolvedPopup();
-                        sudokuStorage.saveState();
                     }
                 });
             }
