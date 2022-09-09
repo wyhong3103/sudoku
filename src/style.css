@@ -102,6 +102,11 @@ html{
     border: none;
     padding : 1.5rem;
     background-color : var(--colorShadeC);
+    transition : all 0.3s;
+}
+
+input.invalid{
+    border : 1px solid var(--redColorA);
 }
 
 .proceed-btn{
@@ -188,6 +193,37 @@ button.big-button:active::before {
     align-items: center;
     gap : 3rem;
 }
+
+.detail-container{
+    position: absolute;
+    display: grid;
+    grid-template-columns: repeat(10,1fr);
+    padding : 1rem;
+}
+
+.detail-left{
+    grid-column: 1 / 4;
+    padding : 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.detail-right{
+    font-size : 2rem;
+    color : var(--colorShadeA);
+    grid-column: 4 / -1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding : 1rem;
+}
+
+.avatar{
+    height : 5rem;
+    width : 5rem;
+}
+
 
 h1.title{
     font-size : 10rem;

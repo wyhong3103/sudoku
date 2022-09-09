@@ -2,6 +2,10 @@ import './style.css';
 
 const currentMode = [0, 17];
 let isInGame = false;
+const userData = {
+    "username" : "",
+    "solvedCnt" : 0
+};
 let currentState = {};
 
 const game = (() => {
@@ -273,8 +277,11 @@ const game = (() => {
 const view = (() => { 
     const content = document.querySelector("#content");
 
-    function initMenu(){
+    function clearInnerHTML(){
         content.innerHTML = "";
+    }
+
+    function initMenu(){
         const menu = document.createElement("div");
         menu.classList.add("init-menu");
 
@@ -314,7 +321,6 @@ const view = (() => {
     }
 
     function mainMenu(){
-        content.innerHTML = "";
         const mainContainer = document.createElement("div");
         mainContainer.classList.add("main-menu");
 
@@ -428,10 +434,42 @@ const view = (() => {
         choicePopUpDiv.appendChild(unsetBtn);
         content.appendChild(choicePopUpContainer);
     }
+
+    function userDetails(){
+        const detailContainer = document.createElement("div");
+        detailContainer.classList.add("detail-container");
+
+        const detailLeft = document.createElement("div");
+        detailLeft.classList.add("detail-left");
+
+        const avatar = document.createElement("img");
+        avatar.src = './assets/avatar.svg';
+        avatar.setAttribute("alt", "avatar");
+        avatar.classList.add("avatar");
+
+        detailLeft.appendChild(avatar);
+
+        const detailRight = document.createElement("div");
+        detailRight.classList.add("detail-right");
+
+        const usernameP = document.createElement("p");
+        usernameP.classList.add("username");
+        const solvedP = document.createElement("p");
+        solvedP.textContent = "Puzzle Solved : ";
+        const solvedSpan = document.createElement("span");
+        solvedSpan.classList.add("solved-count");
+        solvedP.appendChild(solvedSpan);
+
+        detailRight.appendChild(usernameP);
+        detailRight.appendChild(solvedP);
+
+        detailContainer.appendChild(detailLeft);
+        detailContainer.appendChild(detailRight);
+        content.appendChild(detailContainer);
+    }
     
 
     function gameInterface(){
-        content.innerHTML = "";
         const gameContainer = document.createElement("div");
         gameContainer.classList.add("game-container");
 
@@ -511,20 +549,39 @@ const view = (() => {
         modePopUp,
         choicePopUp,
         gameInterface,
-        setMode
+        setMode,
+        userDetails,
+        clearInnerHTML
     };
 })();
 
 const controller = (() => {
+    function setUserDetail(){
+        view.userDetails();
+        const username = document.querySelector(".username");
+        username.textContent = userData.username;
+        const solvedCnt = document.querySelector(".solved-count");
+        solvedCnt.textContent = `${userData.solvedCnt}`;
+    }
+
     function removeLastChild(){
         const content = document.querySelector("#content");
         content.removeChild(content.lastChild);
     }
 
     function setInitMenu(){
+        const inp = document.querySelector("#username-inp");
         const proceedBtn = document.querySelector(".proceed-btn");
         proceedBtn.addEventListener("click", ()=>{
+            if (inp.checkValidity() === false){
+                inp.classList.add("invalid");
+                inp.value = "";
+                return;
+            }
             function switchTo(){
+                view.clearInnerHTML();
+                userData.username = inp.value;
+                setUserDetail();
                 view.mainMenu();
                 setMainMenu();
             }
@@ -545,6 +602,8 @@ const controller = (() => {
         const startBtn = document.querySelector(".start-btn");
         startBtn.addEventListener("click", () => {
             function switchTo(){
+                view.clearInnerHTML();
+                setUserDetail();
                 view.gameInterface();
                 setGameInterface();
             }
@@ -717,6 +776,7 @@ const controller = (() => {
 
         const ansBtn = document.querySelector(".ans-btn");
         ansBtn.addEventListener("click", () => {
+            clearHintCell();
             if (currentState.isSolved()){
                 return;
             }
@@ -740,6 +800,8 @@ const controller = (() => {
             function switchTo(){
                 isInGame = false;
                 clearTimer();
+                view.clearInnerHTML();
+                setUserDetail();
                 view.gameInterface();
                 setGameInterface();
             }
@@ -751,6 +813,8 @@ const controller = (() => {
             function switchTo(){
                 isInGame = false;
                 clearTimer();
+                view.clearInnerHTML();
+                setUserDetail();
                 view.mainMenu();
                 setMainMenu();
             }
@@ -759,6 +823,7 @@ const controller = (() => {
     }
 
     function init(){
+        view.clearInnerHTML();
         view.initMenu();
         setInitMenu();
     }    
