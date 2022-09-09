@@ -278,6 +278,7 @@ h1.title{
     width : 100%;
     background-color: black;
     opacity : 0.5;
+    overflow: auto;
 }
 
 .mode-pop-up-container{
@@ -384,6 +385,11 @@ h1.title{
         grid-row: 2 / -1;
         grid-column: 3 / -1;
     }
+
+    .game-board{
+        height : 55rem;
+        width : 55rem;
+    }
 }
 
 @media (max-width : 1000px){
@@ -402,6 +408,10 @@ h1.title{
 
     .game-options{
         order : 2;
+    }
+    .game-board{
+        height : 40rem;
+        width : 40rem;
     }
 }
 
@@ -467,8 +477,6 @@ h1.title{
 }
 
 .game-board{
-    height : 55rem;
-    width : 55rem;
     display: grid;
     grid-template-columns: repeat(9, 1fr);
     grid-template-rows: repeat(9, 1fr);
@@ -583,15 +591,35 @@ h1.title{
     align-items: center;
 }
 
-.user-cell p{
-    font-size : 2.75rem;
-    font-family: var(--userCellFont);
+@media (min-width : 1001px){
+    .user-cell p{
+        font-size : 2.75rem;
+        font-family: var(--userCellFont);
+    }
+
+    .preloaded-cell p{
+        font-size: 2.5rem;
+        font-family: var(--mainFont); 
+    }
 }
 
-.preloaded-cell p{
-    font-size: 2.5rem;
-    font-family: var(--mainFont); 
+@media (max-width : 1000px){
+    .cell{
+        height : calc(40rem/9);
+        width : calc(40rem/9);
+    }
+    
+    .user-cell p{
+        font-size : 2rem;
+        font-family: var(--userCellFont);
+    }
+
+    .preloaded-cell p{
+        font-size: 2rem;
+        font-family: var(--mainFont); 
+    }
 }
+
 
 #g-hint{
     color : var(--greenColorA);
