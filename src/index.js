@@ -578,7 +578,7 @@ const view = (() => {
         
         const p = document.createElement("p");
         const time = document.querySelector(".cur-time");
-        p.textContent = `Congratulation! You have solve the ${currentMode[0] === 0 ? "Standard" : `Custom - ${currentMode[1]}`} Puzzle with ${currentState.getHintCnt()} hints, in ${time.textContent}.`;
+        p.textContent = `Congratulation! You have solved the ${currentMode[0] === 0 ? "Standard" : `Custom - ${currentMode[1]}`} Puzzle with ${currentState.getHintCnt()} hints, in ${time.textContent}.`;
 
         const continueBtn = document.createElement("div");
         continueBtn.classList.add("continue-btn");
