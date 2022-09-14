@@ -7,7 +7,7 @@ A really fun project in general, and the challenges I faced are
 - Organizing my code (which I still think is bad btw)
 - Figuring how would the hinting system work (this current hinting system was not my initial idea, but it turnt out better)
 - Figuring out a scoring system (which I did not succeed, I've taken a look at chess rating system, but I couldn't handle the math :P), someday....
-
+- Making it responsive to any sizes of screen (which I did not succeed, there's still a minor bug on this)
 
 # Reference
 
